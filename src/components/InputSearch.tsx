@@ -1,27 +1,34 @@
-import { Input as NativeBaseInput, IInputProps, IIconButtonProps} from 'native-base';
+import { Input as NativeBaseInput, IInputProps, Icon, useTheme, IIconButtonProps, Box} from 'native-base';
+import { MagnifyingGlass} from 'phosphor-react-native';
 
-export function InputSearch() { 
-    return (        
+export function InputSearch() {
+    const {colors, sizes} = useTheme();
+    
+    return (
         <NativeBaseInput
-            bg="gray.200"                
+            bg="gray.600"
             h={10}
-            w="80%"
-            px={8}
+            w="83%"
+            p={2}
+            mx={8}
             borderWidth={0}
             fontSize="sm"
-            color="gray.700"
+            color="gray.200"
             fontFamily="body"
-            placeholderTextColor="gray.400"  
-            placeholder='Buscar anúncio'
-            rounded={8} 
-            mt={5}         
-            
+            placeholderTextColor="gray.500"
+            placeholder='Pesquisar'
+            rounded={4}
+            mt={5}
             _focus={{
-                bgColor: 'red',
-                borderWidth: 1,
-                borderColor: 'blue.500'
-            }}   
-            
-        />          
+            bgColor: 'red',
+            borderWidth: 1,
+            borderColor: 'purple.200'
+            }}
+            InputLeftElement={
+                <Box pl={2}>
+                  <MagnifyingGlass color={colors.gray[500]} size={sizes[4]} />
+                </Box>
+            }
+        />
     );
-}
+  }

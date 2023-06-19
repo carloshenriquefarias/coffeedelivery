@@ -1,39 +1,27 @@
 import { Text, HStack, IconButton, useTheme, Icon } from 'native-base'
-import { Horse, Heart, Cube } from 'phosphor-react-native';
+import { ArrowRight, Plus, Tag, MapPin, ShoppingCart} from 'phosphor-react-native';
 
-type HeaderProps = {
-    iconRight?: JSX.Element;
-    iconLeft?: JSX.Element;
-    text?: string;
-    advice?: string;
-    onPress?: () => void;
-    variant?: 'default' | 'base1' | 'base2';
-}
-
-export function Header( { iconLeft, variant, onPress, iconRight, text, advice } : HeaderProps ){
+export function Header(){
     const {colors, sizes} = useTheme();
+
+    function GoToCart(){
+
+    }
+    
     return (
         <HStack justifyContent="space-between" alignItems='center' mt={12} px={8}>
-            <HStack justifyContent="flex-start" alignItems='center'>
-                {/* <IconButton
-                    onPress={onPress}
-                    icon={<Heart color={colors.gray[600]} weight="bold"/>}
-                    // icon={
-                    //     <Icon
-                    //     as={iconLeft}
-                    //     name=''
-                    //     size={6}
-                    //     color={variant === 'default' ? 'purple.300' :  
-                    //         variant === 'base1' ? 'gray.300' : 'gray.700'
-                    //     }   
-                    // />}
-                /> */}
-                <Text color="gray.300">{text}</Text>
+            <HStack justifyContent="flex-start" alignItems='center' space={2}>
+                <MapPin color={colors.purple[200]} size={sizes[5]}/>
+                <Text color="gray.300">Jaci Paraná, RO</Text>
             </HStack>
 
             <HStack justifyContent="flex-start" alignItems='center'>
-                <Text color="gray.300">{iconRight}</Text>
-                <Text color="purple.300">{advice}</Text>
+                <IconButton
+                    onPress={GoToCart}
+                    icon={
+                        <ShoppingCart color={colors.yellow[300]} size={sizes[5]}/>
+                    }
+                />
             </HStack>            
         </HStack>        
     )
