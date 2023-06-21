@@ -1,40 +1,64 @@
 import { Box, HStack, VStack, Text, Center } from "native-base";
-
+import { Images } from '@components/Image';
 export interface Coffee {
     id: string;
-    // tags: string[];
+    tags?: string[];
     name: string;
     description: string;
-    // photo: string;
+    photo: string;
     price: string;
 }
 
-export function CardCoffee ({id, name, description, price} : Coffee) {
+export function CardCoffee ({id, name, description, price, tags, photo} : Coffee) {
     return(
-        <HStack 
-            bg="gray.100" 
-            w="340" 
-            h="150" 
+        <Box
+            bg="gray.100"
+            w={340}
+            h={140}
             mx={8}
-            rounded={[4, 16, 4, 16]} 
-            justifyContent="space-between"
-            alignItems="center"
             mt={5}
-        >
-            <Box bg="gray.300" w="40%">
-                <Text color="purple.300" fontWeight="bold" textAlign="center">{id}</Text>
-            </Box>
+            style={{
+                borderTopLeftRadius: 5,
+                borderTopRightRadius: 25,
+                borderBottomRightRadius: 5,
+                borderBottomLeftRadius: 25,
+                overflow: 'hidden',
+            }}
+            >
+            <HStack
+                justifyContent="space-between"
+                alignItems="center"
+                px={4}
+                py={3}
+            >
+                <Box top={-30}>
+                    <Images 
+                        source={{uri: photo}} 
+                        key={photo} 
+                        size={24}  
+                        ml={1}
+                        alt={'Foto'}
+                    />
+                </Box>
 
-            <Center w="60%" bg="gray.100">
-                <Text color="gray.700" fontWeight="bold" textAlign="center" mt={1}>{name}</Text>
+                <Center w="70%">
+                <Text color="gray.700" fontWeight="bold" textAlign="center" fontSize="md" mt={1}>
+                    {name}
+                </Text>
                 <Text color="gray.500" textAlign="center" mt={2} px="2" fontSize="sm">
                     {description}
                 </Text>
-                <HStack space={1}justifyContent="center" alignItems="center" mt={1}>
-                    <Text color="yellow.300" fontWeight="bold" textAlign="center">R$</Text>
-                    <Text color="yellow.300" fontWeight="bold" textAlign="center" fontSize="lg">{price}</Text>
+                <HStack space={1} justifyContent="center" alignItems="center" mt={1}>
+                    <Text color="yellow.300" fontWeight="bold" textAlign="center">
+                    R$
+                    </Text>
+                    <Text color="yellow.300" fontWeight="bold" textAlign="center" fontSize="lg">
+                    {price}
+                    </Text>
                 </HStack>
-            </Center>            
-        </HStack>
+                </Center>
+            </HStack>
+        </Box>
+
     )
 }

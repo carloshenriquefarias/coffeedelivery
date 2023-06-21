@@ -6,7 +6,7 @@ export function InputSearch() {
     
     return (
         <NativeBaseInput
-            bg="gray.600"
+            bg="gray.700"
             h={10}
             w="83%"
             p={2}

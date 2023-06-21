@@ -18,6 +18,7 @@ export function BoxCondition({ name, isActive, ...rest }: Props) {
       isPressed={isActive}
       mr={2}
       borderColor="purple.300"
+      borderWidth={1}
 
       _pressed={{
         background: 'purple.200'
