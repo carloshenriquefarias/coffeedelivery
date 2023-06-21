@@ -4,8 +4,8 @@ export function TypeCoffee(){
     return(
         <Stack 
             bg="gray.200" 
-            w="50%" 
-            h="80%" 
+            w={200} 
+            h={300} 
             top={-70} 
             mx={8}
             rounded={[4, 16, 4, 16]} 
