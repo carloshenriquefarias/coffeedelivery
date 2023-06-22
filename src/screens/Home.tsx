@@ -1,6 +1,5 @@
 import {Box, FlatList, HStack, ScrollView, Stack, StatusBar, Text, VStack, useTheme, SectionList} from 'native-base'
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
-import { ArrowRight, Plus, Tag} from 'phosphor-react-native';
 
 import { InputSearch } from '@components/InputSearch';
 import { Header } from '@components/Header';
@@ -12,6 +11,7 @@ import { CardCoffee } from '@components/CardCoffee';
 import { Loading } from '@components/Loading';
 
 import { americano } from 'public/coffees/americano.png';
+import { ArrowRight, Plus, Tag, MapPin, ShoppingCart} from 'phosphor-react-native';
 
 interface CoffeeData {
     id: string;
@@ -204,14 +204,14 @@ export function Home(){
                                 />                                                                 
                             </HStack>
 
-                            <Stack mt={4}>                                                
+                            <Box mt={4}>                                                
                                 <SectionList
                                     sections={sectionsArray}
                                     renderItem={renderItem}
                                     renderSectionHeader={renderSectionHeader}
                                     keyExtractor={(item, index) => item.id + index}
                                 />
-                            </Stack>
+                            </Box>
                         </Box>
                     </Box>
                 </VStack>

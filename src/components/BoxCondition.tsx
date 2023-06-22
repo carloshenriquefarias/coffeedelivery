@@ -3,20 +3,21 @@ import { Text, Pressable, IPressableProps } from 'native-base';
 type Props = IPressableProps & {
   name: string;
   isActive: boolean;
+  size?: 'large' | 'small'
 }
 
-export function BoxCondition({ name, isActive, ...rest }: Props) {
+export function BoxCondition({ name, isActive, size = 'small', ...rest }: Props) {
   return (
     <Pressable
       bg="gray.50"
-      rounded={10}
-      h={6}
-      w={'24'} 
+      rounded={size === "small" ? '10' : '5'}
+      w={size === "small" ? '24' : '24'}
+      h={size === "small" ? '6' : '10'} 
       justifyContent="center"
       alignItems="center"
       overflow="hidden"
       isPressed={isActive}
-      mr={2}
+      mr={3}
       borderColor="purple.300"
       borderWidth={1}
 
