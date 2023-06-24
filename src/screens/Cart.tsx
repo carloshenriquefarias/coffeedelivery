@@ -19,6 +19,8 @@ import { coffee } from '@assets/coffee.png';
 import { ButtonDefault } from '@components/Button';
 import { ItemCart } from '@components/ItemCart';
 
+import { RootStackScreenProps } from 'src/@types/navigation';
+
 interface CoffeeData {
     id: string;
     tags: string;
@@ -55,7 +57,7 @@ const coffeeBanner = [
     },
 ]; 
 
-export function Cart(){
+export function Cart({ navigation }: RootStackScreenProps<'Cart'>){
   const {colors, sizes} = useTheme();
   const coffeeSizes = ['114 ml', '140 ml', '227 ml'];
   const [conditionSelected, setConditionSelected] = useState('114 ml'); 
@@ -106,6 +108,18 @@ export function Cart(){
       },
   ];
 
+  function handleGoBackToOrder() {
+    // setLoading(true)
+    navigation.navigate('Order');
+    setLoading(false)
+  }
+
+  function handleConfirmOrder() {
+    // setLoading(true)
+    navigation.navigate('OrderFinished');
+    setLoading(false)
+  }
+
   function handleCondition(item: string) {       
       setConditionSelected(item);             
       setIsNew(item ==='TRADICIONAIS' ? true : false);        
@@ -121,7 +135,7 @@ export function Cart(){
         <VStack flex={1}>            
           <Box width="100%" h="550px" backgroundColor="gray.50">
             <HStack justifyContent="space-around" alignItems='center' mt={12} px={1} space={1}>
-              <IconButton icon={<ArrowLeft color={colors.gray[700]} size={sizes[6]}/>}/>
+              <IconButton icon={<ArrowLeft color={colors.gray[700]} size={sizes[6]}/>} onPress={handleGoBackToOrder}/>
               <Text color="gray.700" fontWeight="bold" textAlign="center" fontSize={"lg"}>Carrinho</Text>
               <Text color="gray.50" fontWeight="bold" textAlign="center" fontSize={"xl"}>Irlandês</Text>
             </HStack> 
@@ -147,7 +161,7 @@ export function Cart(){
             </HStack>
 
             <HStack alignItems='center' mt={2} px={8}>
-              <ButtonDefault title='CONFIRMAR O PEDIDO' bg="yellow.300" size="total" mt={2}/>
+              <ButtonDefault title='CONFIRMAR O PEDIDO' bg="yellow.300" size="total" mt={2} onPress={handleConfirmOrder}/>
             </HStack>
           </Box>                  
 

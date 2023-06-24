@@ -4,19 +4,21 @@ import {Box, FlatList, HStack, ScrollView, Stack, StatusBar, Text, VStack,
 import { Images } from '@components/Image';
 import { useState } from "react";
 import { Trash, Plus, Tag, Minus, ShoppingCart, ArrowLeft} from 'phosphor-react-native';
+import coffee from '@assets/coffee.png';
+import { ImageSourcePropType, Platform } from 'react-native';
 
 export interface Coffee {
     id: string;
     tags?: string[];
     name: string;
     description: string;
-    photo: string;
+    photo: ImageSourcePropType;
     price: string;
 }
 
 export function ItemCart(){
 
-    const photo = 'https://github.com/carloshenriquefarias.png'
+    const photo = coffee
     const [quantity, setQuantity] = useState(1);
     const {colors, sizes} = useTheme();
 
@@ -40,7 +42,7 @@ export function ItemCart(){
             >
                 <Box>
                     <Images 
-                        source={{uri: photo}} 
+                        source={photo} 
                         key={photo} 
                         size={20}  
                         ml={1}

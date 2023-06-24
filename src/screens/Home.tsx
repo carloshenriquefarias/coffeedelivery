@@ -1,17 +1,25 @@
-import {Box, FlatList, HStack, ScrollView, Stack, StatusBar, Text, VStack, useTheme, SectionList} from 'native-base'
+import {Box, FlatList, HStack, ScrollView, Stack, StatusBar, Text, VStack, useTheme, 
+    SectionList, Button, Modal} from 'native-base'
+;
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 
-import { InputSearch } from '@components/InputSearch';
-import { Header } from '@components/Header';
-import { TypeCoffee } from '@components/TypeCoffe';
-import { useState } from 'react';
-import { BoxCondition } from '@components/BoxCondition';
 import { SafeAreaView } from 'react-native';
-import { CardCoffee } from '@components/CardCoffee';
-import { Loading } from '@components/Loading';
+import { useState } from 'react';
 
-import { americano } from 'public/coffees/americano.png';
+import { CardCoffee } from '@components/CardCoffee';
+import { BoxCondition } from '@components/BoxCondition';
+import { Header } from '@components/Header';
+import { InputSearch } from '@components/InputSearch';
+import { Loading } from '@components/Loading';
+import { TypeCoffee } from '@components/TypeCoffe';
+import { ModalMenseger } from '@components/ModalMenseger';
+
+
+import coffee from '@assets/coffee.png';
 import { ArrowRight, Plus, Tag, MapPin, ShoppingCart} from 'phosphor-react-native';
+
+import { RootStackScreenProps } from 'src/@types/navigation';
+import { BottomModal } from '@components/BottomModal';
 
 interface CoffeeData {
     id: string;
@@ -20,6 +28,7 @@ interface CoffeeData {
     description: string;
     photo: string;
     price: string;
+    onPress?: () => void;
 }
 
 const coffeeBanner = [
@@ -49,7 +58,7 @@ const coffeeBanner = [
     },
 ]; 
 
-export function Home(){
+export function Home({ navigation }: RootStackScreenProps<'Home'>){
     const {colors, sizes} = useTheme();
     const coffeeOptions = ['TRADICIONAIS', 'DOCES', 'ESPECIAIS'];
     const [conditionSelected, setConditionSelected] = useState('TRADICIONAIS'); 
@@ -59,7 +68,7 @@ export function Home(){
     const coffeeData: CoffeeData[] = [
         {
           id: '1',
-          tags: 'TRADICIONAL',
+          tags: 'Tradicional',
           name: 'Latte',
           description: 'Café expresso com o dobro de leite e espuma cremosa',
           price: '9,99',
@@ -67,7 +76,7 @@ export function Home(){
         },
         {
           id: '2',
-          tags: 'TRADICIONAL',
+          tags: 'Tradicional',
           name: 'Cappuccino',
           description: 'Café expresso com leite vaporizado e cobertura de espuma de leite',
           price: '8,50',
@@ -97,7 +106,39 @@ export function Home(){
             price: '15,50',
             photo: 'https://github.com/carloshenriquefarias.png'
         },
+        {
+            id: '6',
+            tags: "Tradicional",
+            name: "Expresso Tradicional",
+            description: "O tradicional café feito com água quente e grãos moídos",
+            photo: 'require(coffee)',
+            price: '9.95',
+        },
+        {
+            id: '7',
+            tags: "Tradicional",
+            name: "Expresso Americano",
+            description: "Expresso diluído, menos intenso que o tradicional",
+            photo: "americano.png",
+            price: '9.9',
+        },
+        {
+            id: '8',
+            tags: "Tradicional",
+            name: "Expresso Cremoso",
+            description: "Café expresso tradicional com espuma cremosa",
+            photo: "cremoso.png",
+            price: '9.9',
+        },
     ];
+
+    function handleGoToOrder() {
+        navigation.navigate('Order');
+    }
+    
+    // function handleGoToMealScreen(coffee: CoffeeData) {
+    // navigation.navigate('Order', { coffee });
+    // }
 
     const sections: { [key: string]: { title: string; data: CoffeeData[] } } = coffeeData.reduce(
         (acc, coffee) => {
@@ -121,6 +162,7 @@ export function Home(){
             name={item.name}
             description={item.description}
             price={item.price}
+            onPress={handleGoToOrder}
         />
     );
 
@@ -137,57 +179,67 @@ export function Home(){
         <ScrollView 
             contentContainerStyle={{ flexGrow: 1 }} 
             showsVerticalScrollIndicator={false}
-            backgroundColor="gray.100"
+            // backgroundColor="gray.50"
         >
             <SafeAreaView>
                 <VStack flex={1}>            
                     <Box width="100%" h="400px" backgroundColor="gray.800">
-                        <Header/>
-                        <Text mt={10} color="gray.200" fontSize="xl" px="8">
+                        <Header goToCart={handleGoToOrder}/>
+                        <Text mt={10} color="gray.200" fontWeight="bold" fontSize="lg" px="8">
                             Encontre o café perfeito para qualquer hora do dia
                         </Text>
                         <InputSearch/>
                     </Box>
 
                     <Box width="100%" backgroundColor="white">
-                        <FlatList
-                            data={coffeeBanner} 
-                            keyExtractor={item => item.id}
-                            numColumns={1}
+                        <Box>     
+                            <FlatList
+                                data={coffeeBanner} 
+                                keyExtractor={item => item.id}
+                                numColumns={1}
 
-                            renderItem={({ item }) => (
-                                (!loading) ?
-                                    <TypeCoffee
-                                        id={item.id}
-                                        photo={item.photo}
-                                        tags={item.tags}
-                                        name={item.name}
-                                        description={item.description}
-                                        price={item.price}
-                                    />
-                                :  
-                                <Loading bgColor='white'/>                  
-                            )}
+                                renderItem={({ item }) => (
+                                    (!loading) ?
+                                        <TypeCoffee
+                                            id={item.id}
+                                            photo={item.photo}
+                                            tags={item.tags}
+                                            name={item.name}
+                                            description={item.description}
+                                            price={item.price}
+                                        />
+                                    :  
+                                    <Loading bgColor='white'/>                  
+                                )}
 
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            _contentContainerStyle={{ paddingBottom: 20 }}
+                                horizontal
+                                showsHorizontalScrollIndicator={false}
+                                _contentContainerStyle={{ paddingBottom: 20 }}
 
-                            ListEmptyComponent={() => (
-                                <VStack alignItems='center' justifyContent='center' flex={1} mt={16}>                                    
-                                    <Text fontFamily='body' color='gray.400' fontSize='md'>
-                                        Nenhum café encontrado
-                                    </Text>
-                                </VStack>
-                            )}
-                        />                     
+                                ListEmptyComponent={() => (
+                                    <VStack alignItems='center' justifyContent='center' flex={1} mt={16}>                                    
+                                        <Text fontFamily='body' color='gray.400' fontSize='md'>
+                                            Nenhum café encontrado
+                                        </Text>
+                                    </VStack>
+                                )}
+                                // style={{
+                                //     position: 'absolute',
+                                //     top: 0,
+                                //     bottom: 0,
+                                //     left: 0,
+                                //     right: 0,
+                                //     zIndex: 1,
+                                // }}
+                            />  
+                        </Box>                  
 
                         <Box top={-100}>
-                            <Text color="gray.700" fontSize="md" px="8">
+                            <Text color="gray.700" fontSize="md" px="8" fontWeight="bold">
                                 Nossos cafés
                             </Text>
 
-                            <HStack space={5} px="8" mt={4}>
+                            <HStack space={7} px="8" mt={4}>
                                 <FlatList 
                                     data={coffeeOptions}
                                     keyExtractor={item => item}
@@ -204,7 +256,7 @@ export function Home(){
                                 />                                                                 
                             </HStack>
 
-                            <Box mt={4}>                                                
+                            <Box mt={3}>                                                
                                 <SectionList
                                     sections={sectionsArray}
                                     renderItem={renderItem}

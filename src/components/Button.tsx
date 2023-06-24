@@ -33,7 +33,9 @@ export function ButtonDefault({ title, icon, variant = 'default', size = 'half',
       <Text 
         color={variant === 'default' ? 'gray.100' : 'white'}
         fontFamily="body"
-        fontSize="md"
+        fontSize="sm"
+        textAlign="center"
+        fontWeight={variant === 'default' ? 'bold' : ''}
       >
         {title}
       </Text>

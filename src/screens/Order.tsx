@@ -17,7 +17,7 @@ import { ArrowRight, Plus, Tag, Minus, ShoppingCart, ArrowLeft} from 'phosphor-r
 import { Images } from '@components/Image';
 import { coffee } from '@assets/coffee.png';
 import { ButtonDefault } from '@components/Button';
-
+import { RootStackScreenProps } from 'src/@types/navigation';
 interface CoffeeData {
     id: string;
     tags: string;
@@ -54,7 +54,7 @@ const coffeeBanner = [
     },
 ]; 
 
-export function Order(){
+export function Order({ navigation }: RootStackScreenProps<'Order'>){
   const {colors, sizes} = useTheme();
   const coffeeSizes = ['114 ml', '140 ml', '227 ml'];
   const [conditionSelected, setConditionSelected] = useState('114 ml'); 
@@ -120,6 +120,18 @@ export function Order(){
     }
   };
 
+  function handleGoBackToHome() {
+    // setLoading(true)
+    navigation.navigate('Home');
+    setLoading(false)
+  }
+
+  function handleGoToCart() {
+    // setLoading(true)
+    navigation.navigate('Cart');
+    setLoading(false)
+  }
+
   return(
     <ScrollView 
       contentContainerStyle={{ flexGrow: 1 }} 
@@ -131,9 +143,7 @@ export function Order(){
           <Box width="100%" h="500px" backgroundColor="gray.800">
             <HStack justifyContent="space-between" alignItems='center' mt={12} px={8}>
               <HStack justifyContent="flex-start" alignItems='center' space={1}>
-                <IconButton
-                  icon={<ArrowLeft color={colors.gray[200]} size={sizes[6]}/>}
-                />
+                <IconButton icon={<ArrowLeft color={colors.gray[200]} size={sizes[6]}/>} onPress={handleGoBackToHome}/>
               </HStack>
 
               <HStack justifyContent="flex-start" alignItems='center'>
@@ -174,11 +184,11 @@ export function Order(){
           </Box>  
 
           <Box width="100%" backgroundColor="white">
-            <Text color="gray.500" textAlign="left" mt={5} px={8} fontSize={"md"}>
+            <Text color="gray.500" textAlign="left" mt={3} px={8} fontSize={"sm"}>
               Selecione o tamanho:
             </Text>
 
-            <HStack space={6} mx="8" mt={4}>
+            <Center mx="8" mt={4}>
               <FlatList 
                 data={coffeeSizes}
                 keyExtractor={item => item}
@@ -194,13 +204,13 @@ export function Order(){
                 horizontal
                 showsHorizontalScrollIndicator={false}
               />                                                                 
-            </HStack>
+            </Center>
 
-            <HStack justifyContent="space-between" alignItems='center' mt={4} mx={8} bg="gray.100" h={70}>
+            <HStack justifyContent="space-between" alignItems='center' mt={3} mx={8} bg="gray.100" h={60} mb={10}>
               <HStack justifyContent="space-between" alignItems='center' space={1}>
                 <IconButton 
                   icon={<Minus color={colors.purple[200]} 
-                  size={sizes[6]}/>}
+                  size={sizes[5]}/>}
                   onPress={handleRemoveFromCart}
                 />
                 
@@ -209,19 +219,19 @@ export function Order(){
                   // keyboardType="numeric"
                   textAlign="center"
                   value={quantity.toString()}
-                  w={14}
+                  w={10}
                   borderColor="transparent"
                   borderWidth={0}
-                  fontSize={20}
+                  fontSize={16}
                 />
 
                 <IconButton 
                   icon={<Plus color={colors.purple[200]}
-                  size={sizes[5]}/>}
+                  size={sizes[4]}/>}
                   onPress={handleAddToCart}
                 />           
               </HStack>  
-              <ButtonDefault title='Adicionar' mr={2}/>                               
+              <ButtonDefault size="half" title='ADICIONAR' mr={2} onPress={handleGoToCart}/>                               
             </HStack>
           </Box>                  
         </VStack>

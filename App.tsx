@@ -7,6 +7,8 @@ import { Theme } from './src/theme';
 import { Home } from '@screens/Home';
 import { Order } from '@screens/Order';
 import { Cart } from '@screens/Cart';
+import { OrderFinished } from '@screens/OrderFinished';
+import { Routes } from '@routes/index';
 
 export default function App() {
 
@@ -15,7 +17,7 @@ export default function App() {
   return (
     <NativeBaseProvider theme={Theme}>
       <View style={{flex: 1}}>
-        { fontsloaded ? <Cart/> : <Loading/>}
+        { fontsloaded ? <Routes/> : <Loading/>}
 
         <StatusBar
           barStyle="light-content"
