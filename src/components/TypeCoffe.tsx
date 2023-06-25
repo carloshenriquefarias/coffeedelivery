@@ -1,12 +1,12 @@
-import { Box, HStack, Stack, Text } from "native-base";
+import { Box, HStack, Text } from "native-base";
 import { Images } from '@components/Image';
-
+import { ImageSourcePropType, Pressable } from 'react-native';
 export interface Coffee {
     id: string;
     tags?: string;
     name: string;
     description: string;
-    photo: string;
+    photo: ImageSourcePropType;
     price: string;
 }
 
@@ -18,7 +18,6 @@ export function TypeCoffee({id, name, tags, description, price, photo} : Coffee)
             h={300} 
             top={-70} 
             mx={8}
-            // shadow="0px 3px 8px 0px rgba(0,0,0,0.2)"
 
             style={{
                 borderTopLeftRadius: 5,
@@ -36,8 +35,8 @@ export function TypeCoffee({id, name, tags, description, price, photo} : Coffee)
             alignItems="center"
         >
             <Images 
-                source={{uri: photo}} 
-                key={photo} 
+                source={photo} 
+                key={id} 
                 size={24}  
                 mr={1}
                 alt={'Foto'}
@@ -52,8 +51,7 @@ export function TypeCoffee({id, name, tags, description, price, photo} : Coffee)
             <HStack space={1}justifyContent="center" alignItems="center" mt={3}>
                 <Text color="yellow.300" fontWeight="bold" textAlign="center">R$</Text>
                 <Text color="yellow.300" fontWeight="bold" textAlign="center" fontSize="lg">{price}</Text>
-            </HStack>
-            
+            </HStack>            
         </Box>
     )
 }

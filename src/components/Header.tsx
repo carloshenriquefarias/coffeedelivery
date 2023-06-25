@@ -1,5 +1,5 @@
-import { Text, HStack, IconButton, useTheme, Icon } from 'native-base'
-import { ArrowRight, Plus, MapPinLine, MapPin, ShoppingCart} from 'phosphor-react-native';
+import { Text, HStack, IconButton, useTheme} from 'native-base'
+import { MapPin, ShoppingCart } from 'phosphor-react-native';
 
 type Props = {
     goToCart: () => void;

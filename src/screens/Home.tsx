@@ -1,62 +1,39 @@
-import {Box, FlatList, HStack, ScrollView, Stack, StatusBar, Text, VStack, useTheme, 
-    SectionList, Button, Modal, Input as NativeBaseInput} from 'native-base'
-;
-import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
-
-import { SafeAreaView } from 'react-native';
-import { useEffect, useState } from 'react';
+import { Box, FlatList, HStack, ScrollView, Text, VStack, useTheme, SectionList } from 'native-base';
+import { SafeAreaView, ImageSourcePropType } from 'react-native';
+import { useState } from 'react';
 
 import { CardCoffee } from '@components/CardCoffee';
 import { BoxCondition } from '@components/BoxCondition';
 import { Header } from '@components/Header';
 import { InputSearch } from '@components/InputSearch';
-import { Loading } from '@components/Loading';
 import { TypeCoffee } from '@components/TypeCoffe';
-import { ModalMenseger } from '@components/ModalMenseger';
 
-
-import coffee from '@assets/coffee.png';
-import { ArrowRight, Plus, Tag, MapPin, ShoppingCart, MagnifyingGlass} from 'phosphor-react-native';
+import { coffeeData} from '../data/data';
 
 import { RootStackScreenProps } from 'src/@types/navigation';
-import { BottomModal } from '@components/BottomModal';
 
 interface CoffeeData {
     id: string;
     tags: string;
     name: string;
     description: string;
-    photo: string;
+    photo: ImageSourcePropType;
     price: string;
     onPress?: () => void;
 }
 
-const coffeeBanner = [
-    {
-      id: '1',
-      tags: 'TRADICIONAL',
-      name: 'Latte',
-      description: 'Café expresso com o dobro de leite e espuma cremosa',
-      price: '9,99',
-      photo: 'https://github.com/carloshenriquefarias.png'
-    },
-    {
-      id: '2',
-      tags: 'GELADO',
-      name: 'Frappuccino',
-      description: 'Café gelado com chantilly e calda de chocolate',
-      price: '12,99',
-      photo: 'https://github.com/carloshenriquefarias.png'
-    },
-    {
-      id: '3',
-      tags: 'ESPECIAL',
-      name: 'Mocha',
-      description: 'Café expresso com leite, chocolate e chantilly',
-      price: '10,50',
-      photo: 'https://github.com/carloshenriquefarias.png'
-    },
-]; 
+const coffeeNames = ['Latte', 'Mocaccino', 'Irlandês'];
+const selectedCoffees = coffeeData.filter(coffee => coffeeNames.includes(coffee.name));
+const newCoffesArray = selectedCoffees.map(coffee => {
+    return {
+        id: coffee.id,
+        tags: coffee.tags,
+        name: coffee.name,
+        description: coffee.description,
+        photo: coffee.photo,
+        price: coffee.price,
+    };
+});
 
 export function Home({ navigation }: RootStackScreenProps<'Home'>){
     const {colors, sizes} = useTheme();
@@ -69,80 +46,9 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
 
     const [search, setSearch] = useState('')
 
-    const coffeeData: CoffeeData[] = [
-        {
-          id: '1',
-          tags: 'Tradicional',
-          name: 'Latte',
-          description: 'Café expresso com o dobro de leite e espuma cremosa',
-          price: '9,99',
-          photo: 'https://github.com/carloshenriquefarias.png'
-        },
-        {
-          id: '2',
-          tags: 'Tradicional',
-          name: 'Cappuccino',
-          description: 'Café expresso com leite vaporizado e cobertura de espuma de leite',
-          price: '8,50',
-          photo: 'https://github.com/carloshenriquefarias.png'
-        },
-        {
-          id: '3',
-          tags: 'GELADO',
-          name: 'Frappuccino',
-          description: 'Café gelado com chantilly e calda de chocolate',
-          price: '12,99',
-          photo: 'https://github.com/carloshenriquefarias.png'
-        },
-        {
-          id: '4',
-          tags: 'ESPECIAL',
-          name: 'Mocha',
-          description: 'Café expresso com leite, chocolate e chantilly',
-          price: '10,50',
-          photo: 'https://github.com/carloshenriquefarias.png'
-        },
-        {
-            id: '5',
-            tags: 'ESPECIAL',
-            name: 'Mocha XL',
-            description: 'Café expresso com leite, chocolate e chantilly',
-            price: '15,50',
-            photo: 'https://github.com/carloshenriquefarias.png'
-        },
-        {
-            id: '6',
-            tags: "Tradicional",
-            name: "Expresso Tradicional",
-            description: "O tradicional café feito com água quente e grãos moídos",
-            photo: 'require(coffee)',
-            price: '9.95',
-        },
-        {
-            id: '7',
-            tags: "Tradicional",
-            name: "Expresso Americano",
-            description: "Expresso diluído, menos intenso que o tradicional",
-            photo: "americano.png",
-            price: '9.9',
-        },
-        {
-            id: '8',
-            tags: "Tradicional",
-            name: "Expresso Cremoso",
-            description: "Café expresso tradicional com espuma cremosa",
-            photo: "cremoso.png",
-            price: '9.9',
-        },
-    ];
-
     function handleGoToOrder() {
         navigation.navigate('Order');
     }
-    
-    // function handleGoToMealScreen(coffee: CoffeeData) {
-    // navigation.navigate('Order', { coffee });
-    // }
 
     const sections: { [key: string]: { title: string; data: CoffeeData[] } } = coffeeData.reduce(
         (acc, coffee) => {
@@ -189,7 +95,6 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
         <ScrollView 
             contentContainerStyle={{ flexGrow: 1 }} 
             showsVerticalScrollIndicator={false}
-            // backgroundColor="gray.50"
         >
             <SafeAreaView>
                 <VStack flex={1}>            
@@ -207,7 +112,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
                     <Box width="100%" backgroundColor="white">
                         <Box>
                             <FlatList
-                                data={coffeeBanner} 
+                                data={newCoffesArray} 
                                 keyExtractor={item => item.id}
                                 numColumns={1}
                                 renderItem={({ item }) => (                                  

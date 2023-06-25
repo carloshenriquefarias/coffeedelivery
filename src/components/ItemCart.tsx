@@ -40,17 +40,17 @@ export function ItemCart(){
                 px={4}
                 py={3}
             >
-                <Box>
+                <Box justifyContent="space-between" alignItems="center">
                     <Images 
                         source={photo} 
                         key={photo} 
-                        size={20}  
+                        size={16}  
                         ml={1}
                         alt={'Foto'}
                     />
                 </Box>
 
-                <VStack w="70%" justifyContent="flex-start">
+                <VStack w="80%" justifyContent="flex-start">
                     <HStack justifyContent="space-between" alignItems="center" mr={4}>
                         <Text color="gray.700" textAlign="center" fontSize="md" mt={0}>
                             {/* {name} */}

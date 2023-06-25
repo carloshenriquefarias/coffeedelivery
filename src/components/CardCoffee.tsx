@@ -1,30 +1,18 @@
 import { Box, HStack, VStack, Text, Center } from "native-base";
 import { Images } from '@components/Image';
 import { ImageSourcePropType, Pressable } from 'react-native';
-import coffee from '@assets/coffee.png';
-import { formatMoney } from "../utils/formatMoney";
-
-// export interface Coffee {
-//     id: string;
-//     tags?: string[];
-//     name: string;
-//     description: string;
-//     photo: ImageSourcePropType;
-//     price: string;
-// }
-
 export interface Coffee {
     id: string;
     tags?: string[];
     name: string;
     description: string;
-    photo: string;
+    photo: ImageSourcePropType;
     price: string;
     onPress: () => void;
 }
 
 export function CardCoffee ({id, name, description, price, tags, photo, onPress} : Coffee) {
-    // const formattedPrice = formatMoney(price);
+
     return(
         <Pressable onPress={onPress}>
             <Box
@@ -33,6 +21,7 @@ export function CardCoffee ({id, name, description, price, tags, photo, onPress}
                 h={140}
                 mx={8}
                 mt={10}
+                mb={2}
                 style={{
                     borderTopLeftRadius: 5,
                     borderTopRightRadius: 25,
@@ -52,12 +41,10 @@ export function CardCoffee ({id, name, description, price, tags, photo, onPress}
                     px={4}
                     py={3}
                 >
-                    <Box top={-30}>
+                    <Box top={0}>
                         <Images 
-                            source={{uri: photo}} 
-                            key={photo} 
-                            // source={coffee} 
-                            // key={156767} 
+                            source={photo} 
+                            key={id} 
                             size={24}  
                             ml={1}
                             alt={''}
@@ -65,24 +52,23 @@ export function CardCoffee ({id, name, description, price, tags, photo, onPress}
                     </Box>
 
                     <Center w="70%">
-                    <Text color="gray.700" fontWeight="bold" textAlign="center" fontSize="md" mt={1}>
-                        {name}
-                    </Text>
-                    <Text color="gray.500" textAlign="center" mt={2} px="2" fontSize="sm">
-                        {description}
-                    </Text>
-                    <HStack space={1} justifyContent="center" alignItems="center" mt={1}>
-                        <Text color="yellow.300" fontWeight="bold" textAlign="center">
-                        R$
+                        <Text color="gray.700" fontWeight="bold" textAlign="center" fontSize="md" mt={1}>
+                            {name}
                         </Text>
-                        <Text color="yellow.300" fontWeight="bold" textAlign="center" fontSize="lg">
-                        {price}
+                        <Text color="gray.500" textAlign="center" mt={2} px="2" fontSize="sm">
+                            {description}
                         </Text>
-                    </HStack>
+                        <HStack space={1} justifyContent="center" alignItems="center" mt={1}>
+                            <Text color="yellow.300" fontWeight="bold" textAlign="center">
+                                R$
+                            </Text>
+                            <Text color="yellow.300" fontWeight="bold" textAlign="center" fontSize="lg">
+                                {price}
+                            </Text>
+                        </HStack>
                     </Center>
                 </HStack>
             </Box>
         </Pressable>
-
     )
 }

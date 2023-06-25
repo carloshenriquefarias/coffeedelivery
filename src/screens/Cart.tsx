@@ -160,15 +160,11 @@ export function Cart({ navigation }: RootStackScreenProps<'Cart'>){
               </HStack>            
             </HStack>
 
-            <HStack alignItems='center' mt={2} px={8}>
+            <HStack alignItems='center' mt={2} px={8} mb={10}>
               <ButtonDefault title='CONFIRMAR O PEDIDO' bg="yellow.300" size="total" mt={2} onPress={handleConfirmOrder}/>
             </HStack>
           </Box>                  
-
-          
-        </VStack>
-
-        
+        </VStack>        
       </SafeAreaView>
     </ScrollView>      
   );
