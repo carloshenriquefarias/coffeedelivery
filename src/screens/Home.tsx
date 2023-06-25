@@ -1,10 +1,10 @@
 import {Box, FlatList, HStack, ScrollView, Stack, StatusBar, Text, VStack, useTheme, 
-    SectionList, Button, Modal} from 'native-base'
+    SectionList, Button, Modal, Input as NativeBaseInput} from 'native-base'
 ;
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 
 import { SafeAreaView } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { CardCoffee } from '@components/CardCoffee';
 import { BoxCondition } from '@components/BoxCondition';
@@ -16,7 +16,7 @@ import { ModalMenseger } from '@components/ModalMenseger';
 
 
 import coffee from '@assets/coffee.png';
-import { ArrowRight, Plus, Tag, MapPin, ShoppingCart} from 'phosphor-react-native';
+import { ArrowRight, Plus, Tag, MapPin, ShoppingCart, MagnifyingGlass} from 'phosphor-react-native';
 
 import { RootStackScreenProps } from 'src/@types/navigation';
 import { BottomModal } from '@components/BottomModal';
@@ -64,6 +64,10 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
     const [conditionSelected, setConditionSelected] = useState('TRADICIONAIS'); 
     const [isNew, setIsNew] = useState(true)
     const [loading, setLoading] = useState(false)
+
+    const [filteredData, setFilteredData] = useState<CoffeeData[]>([]);
+
+    const [search, setSearch] = useState('')
 
     const coffeeData: CoffeeData[] = [
         {
@@ -175,6 +179,12 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
         setIsNew(item ==='TRADICIONAIS' ? true : false);        
     }
 
+    const handleSearch = (text: string) => {
+        const filtered = coffeeData.filter(coffee => coffee.name.toLowerCase().includes(text.toLowerCase()));
+        setFilteredData(filtered);
+        setSearch(text);
+    };
+    
     return(
         <ScrollView 
             contentContainerStyle={{ flexGrow: 1 }} 
@@ -188,28 +198,27 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
                         <Text mt={10} color="gray.200" fontWeight="bold" fontSize="lg" px="8">
                             Encontre o café perfeito para qualquer hora do dia
                         </Text>
-                        <InputSearch/>
+                        <InputSearch
+                            onChangeText={handleSearch}
+                            value={search}
+                        />
                     </Box>
 
                     <Box width="100%" backgroundColor="white">
-                        <Box>     
+                        <Box>
                             <FlatList
                                 data={coffeeBanner} 
                                 keyExtractor={item => item.id}
                                 numColumns={1}
-
-                                renderItem={({ item }) => (
-                                    (!loading) ?
-                                        <TypeCoffee
-                                            id={item.id}
-                                            photo={item.photo}
-                                            tags={item.tags}
-                                            name={item.name}
-                                            description={item.description}
-                                            price={item.price}
-                                        />
-                                    :  
-                                    <Loading bgColor='white'/>                  
+                                renderItem={({ item }) => (                                  
+                                    <TypeCoffee
+                                        id={item.id}
+                                        photo={item.photo}
+                                        tags={item.tags}
+                                        name={item.name}
+                                        description={item.description}
+                                        price={item.price}
+                                    />               
                                 )}
 
                                 horizontal
@@ -223,14 +232,6 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
                                         </Text>
                                     </VStack>
                                 )}
-                                // style={{
-                                //     position: 'absolute',
-                                //     top: 0,
-                                //     bottom: 0,
-                                //     left: 0,
-                                //     right: 0,
-                                //     zIndex: 1,
-                                // }}
                             />  
                         </Box>                  
 
@@ -258,7 +259,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
 
                             <Box mt={3}>                                                
                                 <SectionList
-                                    sections={sectionsArray}
+                                    sections={search.length > 0 ? [{ title: '', data: filteredData }] : sectionsArray}
                                     renderItem={renderItem}
                                     renderSectionHeader={renderSectionHeader}
                                     keyExtractor={(item, index) => item.id + index}

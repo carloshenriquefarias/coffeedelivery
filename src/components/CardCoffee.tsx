@@ -2,6 +2,7 @@ import { Box, HStack, VStack, Text, Center } from "native-base";
 import { Images } from '@components/Image';
 import { ImageSourcePropType, Pressable } from 'react-native';
 import coffee from '@assets/coffee.png';
+import { formatMoney } from "../utils/formatMoney";
 
 // export interface Coffee {
 //     id: string;
@@ -23,6 +24,7 @@ export interface Coffee {
 }
 
 export function CardCoffee ({id, name, description, price, tags, photo, onPress} : Coffee) {
+    // const formattedPrice = formatMoney(price);
     return(
         <Pressable onPress={onPress}>
             <Box
