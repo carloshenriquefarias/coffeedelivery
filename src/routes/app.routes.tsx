@@ -1,9 +1,18 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'src/@types/navigation';
 import { Cart } from '@screens/Cart';
 import { Home } from '@screens/Home';
 import { Order } from '@screens/Order';
 import { OrderFinished } from '@screens/OrderFinished';
+
+type AppRoutes = {
+  home: undefined;
+  cart: {coffee_id: string};
+  order: {coffee_id: string};
+  orderFinished: undefined;
+}
+
+export type AppNavigatorRoutesProps = NativeStackNavigationProp<AppRoutes>;
 
 const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
 

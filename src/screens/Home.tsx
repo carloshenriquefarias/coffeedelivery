@@ -36,6 +36,8 @@ const newCoffesArray = selectedCoffees.map(coffee => {
 });
 
 export function Home({ navigation }: RootStackScreenProps<'Home'>){
+
+    // const navigation = useNavigation<AppNavigatorRoutesProps>();
     const {colors, sizes} = useTheme();
     const coffeeOptions = ['TRADICIONAIS', 'DOCES', 'ESPECIAIS'];
     const [conditionSelected, setConditionSelected] = useState('TRADICIONAIS'); 
@@ -46,8 +48,8 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
 
     const [search, setSearch] = useState('')
 
-    function handleGoToOrder() {
-        navigation.navigate('Order');
+    function handleGoToOrders() {
+        // navigation.navigate('Order');
     }
 
     const sections: { [key: string]: { title: string; data: CoffeeData[] } } = coffeeData.reduce(
@@ -72,7 +74,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
             name={item.name}
             description={item.description}
             price={item.price}
-            onPress={handleGoToOrder}
+            onPress={() => handleGoToOrder(item.id)}
         />
     );
 
@@ -90,6 +92,10 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
         setFilteredData(filtered);
         setSearch(text);
     };
+
+    function handleGoToOrder(coffee_id: string) {
+        navigation.navigate('Order', {coffee_id});
+    }
     
     return(
         <ScrollView 
@@ -99,7 +105,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
             <SafeAreaView>
                 <VStack flex={1}>            
                     <Box width="100%" h="400px" backgroundColor="gray.800">
-                        <Header goToCart={handleGoToOrder}/>
+                        <Header goToCart={handleGoToOrders}/>
                         <Text mt={10} color="gray.200" fontWeight="bold" fontSize="lg" px="8">
                             Encontre o café perfeito para qualquer hora do dia
                         </Text>

@@ -1,113 +1,70 @@
-import {Box, FlatList, HStack, ScrollView, Stack, StatusBar, Text, VStack, 
-  useTheme, SectionList, Pressable, IconButton, Center, Input} from 'native-base'
+import {Box, FlatList, HStack, ScrollView, Text, VStack, 
+  useTheme, IconButton, Center, Input, useToast} from 'native-base'
 ;
-import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 
-import { InputSearch } from '@components/InputSearch';
-import { Header } from '@components/Header';
-import { TypeCoffee } from '@components/TypeCoffe';
-import { useState } from 'react';
-import { BoxCondition } from '@components/BoxCondition';
+import { useCallback, useState } from 'react';
 import { SafeAreaView } from 'react-native';
-import { CardCoffee } from '@components/CardCoffee';
+import { CoffeeData } from '@dtos/CoffeeDTO';
+import { storageCoffeeGet } from '@storage/storageCoffee';
+
+import { coffee } from '@assets/coffee.png';
+import { coffeeData } from '../data/data';
+import { Plus, Minus, ShoppingCart, ArrowLeft} from 'phosphor-react-native';
+
+import { BoxCondition } from '@components/BoxCondition';
+import { ButtonDefault } from '@components/Button';
+import { Images } from '@components/Image';
 import { Loading } from '@components/Loading';
 
-import { americano } from 'public/coffees/americano.png';
-import { ArrowRight, Plus, Tag, Minus, ShoppingCart, ArrowLeft} from 'phosphor-react-native';
-import { Images } from '@components/Image';
-import { coffee } from '@assets/coffee.png';
-import { ButtonDefault } from '@components/Button';
 import { RootStackScreenProps } from 'src/@types/navigation';
-interface CoffeeData {
-    id: string;
-    tags: string;
-    name: string;
-    description: string;
-    photo: string;
-    price: string;
+import { useFocusEffect, useRoute } from '@react-navigation/native';
+
+import { AppError } from '@utils/AppError';
+
+type RouteParamsProps = {
+  coffee_id: string;
 }
 
-const coffeeBanner = [
-    {
-      id: '1',
-      tags: 'TRADICIONAL',
-      name: 'Latte',
-      description: 'Café expresso com o dobro de leite e espuma cremosa',
-      price: '9,99',
-      photo: 'https://github.com/carloshenriquefarias.png'
-    },
-    {
-      id: '2',
-      tags: 'GELADO',
-      name: 'Frappuccino',
-      description: 'Café gelado com chantilly e calda de chocolate',
-      price: '12,99',
-      photo: 'https://github.com/carloshenriquefarias.png'
-    },
-    {
-      id: '3',
-      tags: 'ESPECIAL',
-      name: 'Mocha',
-      description: 'Café expresso com leite, chocolate e chantilly',
-      price: '10,50',
-      photo: 'https://github.com/carloshenriquefarias.png'
-    },
-]; 
-
 export function Order({ navigation }: RootStackScreenProps<'Order'>){
-  const {colors, sizes} = useTheme();
-  const coffeeSizes = ['114 ml', '140 ml', '227 ml'];
-  const [conditionSelected, setConditionSelected] = useState('114 ml'); 
-  const [quantity, setQuantity] = useState(1);
-  const [isNew, setIsNew] = useState(true)
-  const [loading, setLoading] = useState(false)
 
-  const coffeeData: CoffeeData[] = [
-      {
-        id: '1',
-        tags: 'TRADICIONAL',
-        name: 'Latte',
-        description: 'Café expresso com o dobro de leite e espuma cremosa',
-        price: '9,99',
-        photo: 'https://github.com/carloshenriquefarias.png'
-      },
-      {
-        id: '2',
-        tags: 'TRADICIONAL',
-        name: 'Cappuccino',
-        description: 'Café expresso com leite vaporizado e cobertura de espuma de leite',
-        price: '8,50',
-        photo: 'https://github.com/carloshenriquefarias.png'
-      },
-      {
-        id: '3',
-        tags: 'GELADO',
-        name: 'Frappuccino',
-        description: 'Café gelado com chantilly e calda de chocolate',
-        price: '12,99',
-        photo: 'https://github.com/carloshenriquefarias.png'
-      },
-      {
-        id: '4',
-        tags: 'ESPECIAL',
-        name: 'Mocha',
-        description: 'Café expresso com leite, chocolate e chantilly',
-        price: '10,50',
-        photo: 'https://github.com/carloshenriquefarias.png'
-      },
-      {
-          id: '5',
-          tags: 'ESPECIAL',
-          name: 'Mocha XL',
-          description: 'Café expresso com leite, chocolate e chantilly',
-          price: '15,50',
-          photo: 'https://github.com/carloshenriquefarias.png'
-      },
-  ];
+  const route = useRoute();
+  const toast = useToast();
+  const coffeeSizes = ['114 ml', '140 ml', '227 ml'];  
+
+  const {colors, sizes} = useTheme();
+  const {coffee_id} = route.params as RouteParamsProps
+
+  const [coffeeInformations, setCoffeeInformations] = useState<CoffeeData>();
+  const [conditionSelected, setConditionSelected] = useState('114 ml'); 
+  const [loading, setLoading] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [size, setSize] = useState(true);
+
+  async function fetchCoffeeSelectedDetails() {
+    try {
+      storageCoffeeGet().then(coffeeData => {});
+      const coffee = coffeeData.find(coffee => coffee.id === coffee_id);
+      console.log('aqui as 09:59 =>', coffee);
+      setCoffeeInformations(coffee);
+    
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError ? error.message : 'Não foi possível carregar os detalhes do café';
+  
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500'
+      })
+
+    } finally {
+      setLoading(false);
+    }
+  }
 
   function handleCondition(item: string) {       
-      setConditionSelected(item);             
-      setIsNew(item ==='TRADICIONAIS' ? true : false);        
+    setConditionSelected(item);             
+    setSize(item ==='TRADICIONAIS' ? true : false);        
   }
 
   function handleAddToCart(){
@@ -121,22 +78,25 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
   };
 
   function handleGoBackToHome() {
-    // setLoading(true)
+    setLoading(true)
     navigation.navigate('Home');
     setLoading(false)
   }
 
   function handleGoToCart() {
-    // setLoading(true)
+    setLoading(true)
     navigation.navigate('Cart');
     setLoading(false)
   }
+
+  useFocusEffect(useCallback(() => {
+    fetchCoffeeSelectedDetails();
+  },[coffee_id]))
 
   return(
     <ScrollView 
       contentContainerStyle={{ flexGrow: 1 }} 
       showsVerticalScrollIndicator={false}
-      // backgroundColor="gray.800"
     >
       <SafeAreaView>
         <VStack flex={1}>            
@@ -157,24 +117,24 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
             </HStack>  
 
             <Box bg="gray.700" w="120px" h="35px" mt="3" rounded={10} ml={8} justifyContent="center" alignItems='center'>
-              <Text color="gray.200" fontWeight="bold" textAlign="center">Especial</Text>
+              <Text color="gray.200" fontWeight="bold" textAlign="center">{coffeeInformations?.tags}</Text>
             </Box>
 
             <HStack justifyContent="space-between" alignItems='center' mt={5} px={9}>
-              <Text color="gray.200" fontWeight="bold" textAlign="center" fontSize={"xl"}>Irlandês</Text>
+              <Text color="gray.200" fontWeight="bold" textAlign="center" fontSize={"xl"}>{coffeeInformations?.name}</Text>
               <HStack justifyContent="space-between" alignItems='center' space={1}>
                 <Text color="yellow.200" fontWeight="bold" textAlign="center" fontSize={"sm"}>R$</Text> 
-                <Text color="yellow.200" fontWeight="bold" textAlign="center" fontSize={"xl"}>9,90</Text>           
+                <Text color="yellow.200" fontWeight="bold" textAlign="center" fontSize={"xl"}>{coffeeInformations?.price}</Text>           
               </HStack>                 
             </HStack>
 
             <Text color="gray.200" textAlign="left" mt={5} px={8} fontSize={"md"}>
-              Bebida a base de café, uisque irlandes, acucar e muito chantilly
+              {coffeeInformations?.description}
             </Text> 
 
             <Center mt={5}>
               <Images 
-                source={{uri: 'https://github.com/carloshenriquefarias.png'}} 
+                source={coffee} 
                 key={1} 
                 size={220}  
                 mr={1}
@@ -231,7 +191,7 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
                   onPress={handleAddToCart}
                 />           
               </HStack>  
-              <ButtonDefault size="half" title='ADICIONAR' mr={2} onPress={handleGoToCart}/>                               
+              <ButtonDefault size="half" title='ADICIONAR' mr={2} onPress={handleGoToCart} isLoading={loading}/>                               
             </HStack>
           </Box>                  
         </VStack>
