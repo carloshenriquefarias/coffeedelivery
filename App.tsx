@@ -1,14 +1,11 @@
-import { Text, View, StatusBar} from 'react-native';
+import { View, StatusBar} from 'react-native';
 import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
 import { Baloo2_400Regular } from '@expo-google-fonts/baloo-2';
 import { NativeBaseProvider } from 'native-base';
 import { Loading } from '@components/Loading';
 import { Theme } from './src/theme';
-import { Home } from '@screens/Home';
-import { Order } from '@screens/Order';
-import { Cart } from '@screens/Cart';
-import { OrderFinished } from '@screens/OrderFinished';
 import { Routes } from '@routes/index';
+import { CartContextProvider } from '@contexts/CartContext';
 
 export default function App() {
 
@@ -17,7 +14,9 @@ export default function App() {
   return (
     <NativeBaseProvider theme={Theme}>
       <View style={{flex: 1}}>
-        { fontsloaded ? <Routes/> : <Loading/>}
+        <CartContextProvider>
+          {fontsloaded ? <Routes /> : <Loading />}
+        </CartContextProvider>
 
         <StatusBar
           barStyle="light-content"

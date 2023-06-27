@@ -2,12 +2,11 @@ import {Box, FlatList, HStack, ScrollView, Text, VStack,
   useTheme, IconButton, Center, Input, useToast} from 'native-base'
 ;
 
-import { useCallback, useState } from 'react';
-import { SafeAreaView } from 'react-native';
 import { CoffeeData } from '@dtos/CoffeeDTO';
+import { SafeAreaView } from 'react-native';
 import { storageCoffeeGet } from '@storage/storageCoffee';
+import { useCallback, useState } from 'react';
 
-import { coffee } from '@assets/coffee.png';
 import { coffeeData } from '../data/data';
 import { Plus, Minus, ShoppingCart, ArrowLeft} from 'phosphor-react-native';
 
@@ -20,6 +19,10 @@ import { RootStackScreenProps } from 'src/@types/navigation';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 
 import { AppError } from '@utils/AppError';
+import { useCart } from '@hooks/useCart';
+
+import coffeeImage from '@assets/coffeeImage.png';
+import Smoke from '@assets/Smoke.png';
 
 type RouteParamsProps = {
   coffee_id: string;
@@ -30,21 +33,54 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
   const route = useRoute();
   const toast = useToast();
   const coffeeSizes = ['114 ml', '140 ml', '227 ml'];  
+  
+  const { addProductCart } = useCart();
+  const { colors, sizes} = useTheme();
+  const { coffee_id} = route.params as RouteParamsProps
 
-  const {colors, sizes} = useTheme();
-  const {coffee_id} = route.params as RouteParamsProps
-
-  const [coffeeInformations, setCoffeeInformations] = useState<CoffeeData>();
-  const [conditionSelected, setConditionSelected] = useState('114 ml'); 
+  const [coffeeInformations, setCoffeeInformations] = useState<CoffeeData>({} as CoffeeData);
+  const [sizeSelected, setSizeSelected] = useState('114 ml'); 
   const [loading, setLoading] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState(true);
+
+  async function handleAddProductToCart() {
+    try {
+
+      const coffeeSelectedData = {
+        id: coffeeInformations?.id,
+        size: sizeSelected,
+        name: coffeeInformations?.name,
+        quantity: quantity,
+        price: coffeeInformations?.price,
+        photo: coffeeInformations?.photo,
+      }
+
+      await addProductCart(
+        coffeeSelectedData
+      );
+
+      toast.show({
+        title: 'Produto adicionado no carrinho',
+        placement: 'top',
+        bgColor: 'green.500'
+      });
+
+      navigation.navigate('Cart');
+      
+    } catch (error) {
+      toast.show({
+        title: 'Não foi possível adicionar o produto no carrinho',
+        placement: 'top',
+        bgColor: 'red.500'
+      });
+    }
+  }  
 
   async function fetchCoffeeSelectedDetails() {
     try {
       storageCoffeeGet().then(coffeeData => {});
       const coffee = coffeeData.find(coffee => coffee.id === coffee_id);
-      console.log('aqui as 09:59 =>', coffee);
       setCoffeeInformations(coffee);
     
     } catch (error) {
@@ -63,7 +99,7 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
   }
 
   function handleCondition(item: string) {       
-    setConditionSelected(item);             
+    setSizeSelected(item);             
     setSize(item ==='TRADICIONAIS' ? true : false);        
   }
 
@@ -80,12 +116,6 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
   function handleGoBackToHome() {
     setLoading(true)
     navigation.navigate('Home');
-    setLoading(false)
-  }
-
-  function handleGoToCart() {
-    setLoading(true)
-    navigation.navigate('Cart');
     setLoading(false)
   }
 
@@ -120,27 +150,37 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
               <Text color="gray.200" fontWeight="bold" textAlign="center">{coffeeInformations?.tags}</Text>
             </Box>
 
-            <HStack justifyContent="space-between" alignItems='center' mt={5} px={9}>
-              <Text color="gray.200" fontWeight="bold" textAlign="center" fontSize={"xl"}>{coffeeInformations?.name}</Text>
+            <HStack justifyContent="space-between" alignItems='center' mt={3} px={9}>
+              <Text color="gray.200" fontWeight="bold" textAlign="center" fontSize={"lg"}>{coffeeInformations?.name}</Text>
               <HStack justifyContent="space-between" alignItems='center' space={1}>
                 <Text color="yellow.200" fontWeight="bold" textAlign="center" fontSize={"sm"}>R$</Text> 
                 <Text color="yellow.200" fontWeight="bold" textAlign="center" fontSize={"xl"}>{coffeeInformations?.price}</Text>           
               </HStack>                 
             </HStack>
 
-            <Text color="gray.200" textAlign="left" mt={5} px={8} fontSize={"md"}>
+            <Text color="gray.200" textAlign="left" mt={2} px={8} fontSize={"md"}>
               {coffeeInformations?.description}
             </Text> 
 
-            <Center mt={5}>
+            <Box justifyContent="center" alignItems='center' bottom={-30} h={30}>
               <Images 
-                source={coffee} 
+                source={Smoke} 
                 key={1} 
-                size={220}  
+                size={16}  
+                mr={1}
+                alt={'Foto'}
+              />  
+            </Box>
+
+            <Box justifyContent="center" alignItems='center' bottom={-10}>
+              <Images 
+                source={coffeeImage} 
+                key={1} 
+                size={80}  
                 mr={1}
                 alt={'Foto'}
               />                
-            </Center>                          
+            </Box>                          
           </Box>  
 
           <Box width="100%" backgroundColor="white">
@@ -156,7 +196,7 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
                   <BoxCondition 
                     size="large"
                     name={item}
-                    isActive={conditionSelected.toLocaleUpperCase() 
+                    isActive={sizeSelected.toLocaleUpperCase() 
                       === item.toLocaleUpperCase()}
                     onPress={() => handleCondition(item)}                                               
                   />                                                                         
@@ -191,7 +231,7 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
                   onPress={handleAddToCart}
                 />           
               </HStack>  
-              <ButtonDefault size="half" title='ADICIONAR' mr={2} onPress={handleGoToCart} isLoading={loading}/>                               
+              <ButtonDefault size="half" title='ADICIONAR' mr={2} onPress={handleAddProductToCart} isLoading={loading}/>                               
             </HStack>
           </Box>                  
         </VStack>

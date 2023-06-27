@@ -1,28 +1,17 @@
-import {Box, FlatList, HStack, ScrollView, Stack, StatusBar, Text, VStack, 
-  useTheme, SectionList, Pressable, IconButton, Center, Input} from 'native-base'
-;
+import {Box, ScrollView, StatusBar, Text, VStack, useTheme, Center} from 'native-base';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 
-import { InputSearch } from '@components/InputSearch';
-import { Header } from '@components/Header';
-import { TypeCoffee } from '@components/TypeCoffe';
 import { useState } from 'react';
-import { BoxCondition } from '@components/BoxCondition';
 import { SafeAreaView } from 'react-native';
-import { CardCoffee } from '@components/CardCoffee';
-import { Loading } from '@components/Loading';
 
-import { americano } from 'public/coffees/americano.png';
-import { ArrowRight, Plus, Tag, Minus, ShoppingCart, ArrowLeft} from 'phosphor-react-native';
 import { Images } from '@components/Image';
-import { coffee } from '@assets/coffee.png';
 import { ButtonDefault } from '@components/Button';
-import { ItemCart } from '@components/ItemCart';
 
 import { RootStackScreenProps } from 'src/@types/navigation';
+import Illustration from '@assets/Illustration.png';
 
 export function OrderFinished({ navigation }: RootStackScreenProps<'OrderFinished'>){
-  const {colors, sizes} = useTheme();
+
   const [loading, setLoading] = useState(false)
   const photo = 'https://github.com/carloshenriquefarias.png'
 
@@ -39,13 +28,13 @@ export function OrderFinished({ navigation }: RootStackScreenProps<'OrderFinishe
     >
       <SafeAreaView>
         <VStack flex={1}>            
-          <Box width="100%" h="550px" backgroundColor="gray.50">
-            <Center backgroundColor="gray.50" mt={40}>
+          <Box width="100%" h="900px" backgroundColor="gray.50">
+            <Center backgroundColor="gray.50" mt={40} width="100%">
               <Box>
                 <Images 
-                  source={{uri: photo}} 
-                  key={photo} 
-                  size={24}  
+                  source={Illustration} 
+                  key={1} 
+                  size={40}  
                   ml={1}
                   alt={'Foto'}
                 />

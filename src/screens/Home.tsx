@@ -2,14 +2,13 @@ import { Box, FlatList, HStack, ScrollView, Text, VStack, useTheme, SectionList 
 import { SafeAreaView, ImageSourcePropType } from 'react-native';
 import { useState } from 'react';
 
-import { CardCoffee } from '@components/CardCoffee';
 import { BoxCondition } from '@components/BoxCondition';
+import { CardCoffee } from '@components/CardCoffee';
 import { Header } from '@components/Header';
 import { InputSearch } from '@components/InputSearch';
 import { TypeCoffee } from '@components/TypeCoffe';
 
 import { coffeeData} from '../data/data';
-
 import { RootStackScreenProps } from 'src/@types/navigation';
 
 interface CoffeeData {
@@ -37,19 +36,15 @@ const newCoffesArray = selectedCoffees.map(coffee => {
 
 export function Home({ navigation }: RootStackScreenProps<'Home'>){
 
-    // const navigation = useNavigation<AppNavigatorRoutesProps>();
-    const {colors, sizes} = useTheme();
     const coffeeOptions = ['TRADICIONAIS', 'DOCES', 'ESPECIAIS'];
+
     const [conditionSelected, setConditionSelected] = useState('TRADICIONAIS'); 
-    const [isNew, setIsNew] = useState(true)
-    const [loading, setLoading] = useState(false)
-
     const [filteredData, setFilteredData] = useState<CoffeeData[]>([]);
-
     const [search, setSearch] = useState('')
+    // const [size, setSize] = useState(true);
 
-    function handleGoToOrders() {
-        // navigation.navigate('Order');
+    function handleGoToCart() {
+        navigation.navigate('Cart');
     }
 
     const sections: { [key: string]: { title: string; data: CoffeeData[] } } = coffeeData.reduce(
@@ -84,7 +79,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
 
     function handleCondition(item: string) {       
         setConditionSelected(item);             
-        setIsNew(item ==='TRADICIONAIS' ? true : false);        
+        // setSize(item ==='TRADICIONAIS' ? true : false);        
     }
 
     const handleSearch = (text: string) => {
@@ -105,7 +100,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
             <SafeAreaView>
                 <VStack flex={1}>            
                     <Box width="100%" h="400px" backgroundColor="gray.800">
-                        <Header goToCart={handleGoToOrders}/>
+                        <Header goToCart={handleGoToCart}/>
                         <Text mt={10} color="gray.200" fontWeight="bold" fontSize="lg" px="8">
                             Encontre o café perfeito para qualquer hora do dia
                         </Text>
