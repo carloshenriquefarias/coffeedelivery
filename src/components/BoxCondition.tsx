@@ -18,7 +18,7 @@ export function BoxCondition({ name, isActive, size = 'small', ...rest }: Props)
       overflow="hidden"
       isPressed={isActive}
       mr={3}
-      borderColor="purple.300"
+      borderColor="purple.200"
       borderWidth={1}
 
       _pressed={{
@@ -28,7 +28,7 @@ export function BoxCondition({ name, isActive, size = 'small', ...rest }: Props)
       {...rest}
     >
       <Text
-        color={isActive ? "gray.100" : "purple.300"}
+        color={isActive ? "gray.100" : "purple.200"}
         textTransform="uppercase"
         fontSize="xs"
         fontWeight="bold"

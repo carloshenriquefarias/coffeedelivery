@@ -6,6 +6,10 @@ import { Loading } from '@components/Loading';
 import { Theme } from './src/theme';
 import { Routes } from '@routes/index';
 import { CartContextProvider } from '@contexts/CartContext';
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import "react-native-gesture-handler"
 
 export default function App() {
 
@@ -13,17 +17,21 @@ export default function App() {
 
   return (
     <NativeBaseProvider theme={Theme}>
-      <View style={{flex: 1}}>
-        <CartContextProvider>
-          {fontsloaded ? <Routes /> : <Loading />}
-        </CartContextProvider>
+      <GestureHandlerRootView style={{flex: 1}}>
+        {/* <BottomSheetModalProvider> */}
+          {/* <View style={{flex: 1}}> */}
+            <CartContextProvider>
+              {fontsloaded ? <Routes /> : <Loading />}
+            </CartContextProvider>
 
-        <StatusBar
-          barStyle="light-content"
-          backgroundColor="#272221"
-          translucent
-        />
-      </View>
+            <StatusBar
+              barStyle="light-content"
+              backgroundColor="#272221"
+              translucent
+            />
+          {/* </View> */}
+        {/* </BottomSheetModalProvider> */}
+      </GestureHandlerRootView>
     </NativeBaseProvider>    
   );
 }

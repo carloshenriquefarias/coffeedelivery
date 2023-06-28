@@ -11,6 +11,7 @@ type Props = {
 
 export function ItemCartCard({ data, onRemove }: Props){
     const {colors, sizes} = useTheme();
+    
     const [quantity, setQuantity] = useState(1);
     const unityCoffeePrice = parseFloat(data.price);
     const totalCoffeePrice = (unityCoffeePrice * quantity).toFixed(2);

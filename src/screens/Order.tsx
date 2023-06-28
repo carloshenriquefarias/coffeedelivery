@@ -47,6 +47,8 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
   async function handleAddProductToCart() {
     try {
 
+      setLoading(true);
+
       const coffeeSelectedData = {
         id: coffeeInformations?.id,
         size: sizeSelected,
@@ -60,13 +62,15 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
         coffeeSelectedData
       );
 
-      toast.show({
-        title: 'Produto adicionado no carrinho',
-        placement: 'top',
-        bgColor: 'green.500'
-      });
+      // toast.show({
+      //   title: 'Produto adicionado no carrinho',
+      //   placement: 'top',
+      //   bgColor: 'green.500'
+      // });
 
-      navigation.navigate('Cart');
+      setLoading(false);
+
+      navigation.navigate('Home');
       
     } catch (error) {
       toast.show({
@@ -138,11 +142,11 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
 
               <HStack justifyContent="flex-start" alignItems='center'>
                 <IconButton
-                  icon={<ShoppingCart color={colors.purple[200]} size={sizes[5]}/>}
+                  icon={<ShoppingCart color={colors.gray[50]} size={sizes[5]}/>}
                 />
-                <Box rounded="full" w={5} h={5} bg="purple.200" top={-15} left={-15}>
+                {/* <Box rounded="full" w={5} h={5} bg="purple.200" top={-15} left={-15}>
                   <Text color="gray.200" fontWeight="bold" textAlign="center" fontSize="xs">5</Text>
-                </Box>
+                </Box> */}
               </HStack>            
             </HStack>  
 
@@ -179,6 +183,7 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
                 size={80}  
                 mr={1}
                 alt={'Foto'}
+                resizeMode='cover'
               />                
             </Box>                          
           </Box>  

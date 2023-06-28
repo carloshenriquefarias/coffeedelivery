@@ -40,6 +40,7 @@ export function CardCoffee ({id, name, description, price, tags, photo, onPress}
                     alignItems="center"
                     px={4}
                     py={3}
+                    space={3}
                 >
                     <Box top={0}>
                         <Images 
@@ -51,11 +52,11 @@ export function CardCoffee ({id, name, description, price, tags, photo, onPress}
                         />
                     </Box>
 
-                    <Center w="70%">
+                    <VStack w="70%" justifyContent="center" alignItems="flex-start">
                         <Text color="gray.700" fontWeight="bold" textAlign="center" fontSize="md" mt={1}>
                             {name}
                         </Text>
-                        <Text color="gray.500" textAlign="center" mt={2} px="2" fontSize="sm">
+                        <Text color="gray.500" textAlign="left" pr={3} mt={2} fontSize="sm">
                             {description}
                         </Text>
                         <HStack space={1} justifyContent="center" alignItems="center" mt={1}>
@@ -66,7 +67,7 @@ export function CardCoffee ({id, name, description, price, tags, photo, onPress}
                                 {price}
                             </Text>
                         </HStack>
-                    </Center>
+                    </VStack>
                 </HStack>
             </Box>
         </Pressable>

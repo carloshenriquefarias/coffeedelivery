@@ -5,7 +5,7 @@ type ModalProps = {
     title: string;
     nameButtonOne: string;
     nameButtonTwo: string;
-    onPress: () => Promise<void>;
+    onPress: () => void;
     isLoading?: boolean;
 };
 
