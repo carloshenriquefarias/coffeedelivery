@@ -2,6 +2,7 @@ import { Box, FlatList, ScrollView, VStack, useToast} from 'native-base';
 import { ImageSourcePropType } from 'react-native';
 import { useCart } from '../hooks/useCart';
 import { ItemCartCard } from './ItemCartCard';
+import { useState } from 'react';
 
 export interface Coffee {
     id: string;

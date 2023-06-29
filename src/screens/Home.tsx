@@ -50,7 +50,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
     const [filteredData, setFilteredData] = useState<CoffeeData[]>([]);
     const [search, setSearch] = useState('')
     const [newCoffee, setNewCoffee] = useState(1)
-    const [modalVisible, setModalVisible] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
     const [lastProduct, setLastProduct] = useState({});
 
     const { cart } = useCart();
@@ -58,12 +58,18 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
 
     function newProductOnCart(){
         const productsCart = cart
-        handleOpenModal()
-        // {productsCart.length > 1 && <AlertModal/>}
-
-        const lastCoffee = productsCart[productsCart.length - 1];
+        const amountCoffee = productsCart.length
+        if (amountCoffee + 1 > amountCoffee){
+            console.log('ta entrando aqui as 14:26 =>', amountCoffee)
+            // handleOpenModal()
+            // {productsCart.length > 1 && <AlertModal/>}
+    
+            const lastCoffee = productsCart[productsCart.length - 1];
+            setLastProduct(lastCoffee);
+        }
+       
         // console.log('aqui as 14:15 =>', lastCoffee)
-        setLastProduct(lastCoffee);
+        
     }
 
     

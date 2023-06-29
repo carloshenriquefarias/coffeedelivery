@@ -3,6 +3,7 @@ import { Images } from '@components/Image';
 import { useState } from "react";
 import { Trash, Plus, Minus } from 'phosphor-react-native';
 import { StorageCartProps } from '../storage/storageCoffee';
+import { useCart } from '@hooks/useCart';
 
 type Props = {
     onRemove: () => void;
@@ -11,10 +12,26 @@ type Props = {
 
 export function ItemCartCard({ data, onRemove }: Props){
     const {colors, sizes} = useTheme();
+    const { cart } = useCart();
     
     const [quantity, setQuantity] = useState(1);
     const unityCoffeePrice = parseFloat(data.price);
     const totalCoffeePrice = (unityCoffeePrice * quantity).toFixed(2);
+
+    const calculateTotal = () => {
+        cart.map((item) => {
+            // const total = cart.reduce((acc, item) => acc + item.price, 0);
+            const informations = {
+                id: item.id,
+                quantity: item.quantity,
+                price: item.price
+            }
+
+            // console.log('aqui as 17:08 =>', informations);       
+            return informations;           
+          
+        });
+    };
 
     function handleAddToCart(){
         setQuantity(quantity + 1);
@@ -65,13 +82,14 @@ export function ItemCartCard({ data, onRemove }: Props){
                         <IconButton 
                             icon={<Minus color={colors.purple[200]} 
                             size={sizes[6]}/>}
-                            onPress={handleRemoveFromCart}
+                            onPress={calculateTotal}
                         />
                         
                         <Input
                             onChangeText={(text) => setQuantity(parseInt(text, 10))}
                             // keyboardType="numeric"
                             textAlign="center"
+                            // value={calculateTotal()}
                             value={quantity.toString()}
                             w={10}
                             borderColor="transparent"
