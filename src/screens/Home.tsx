@@ -1,5 +1,5 @@
-import { Box, FlatList, HStack, ScrollView, Text, VStack, useTheme, SectionList, Modal, IconButton } from 'native-base';
-import { SafeAreaView, ImageSourcePropType } from 'react-native';
+import { Box, FlatList, HStack, ScrollView, Text, VStack, useTheme, SectionList, Modal, IconButton, View } from 'native-base';
+import { SafeAreaView, ImageSourcePropType, Dimensions} from 'react-native';
 import { useState, useMemo, useRef, useCallback} from 'react';
 
 import { BoxCondition } from '@components/BoxCondition';
@@ -16,6 +16,8 @@ import { ModalMenseger } from '@components/ModalMenseger';
 import { MapPin, ShoppingCart, ArrowRight} from 'phosphor-react-native';
 import { useCart } from '@hooks/useCart';
 import { useFocusEffect } from '@react-navigation/native';
+
+import Carousel from 'react-native-snap-carousel';
 
 interface CoffeeData {
     id: string;
@@ -40,6 +42,8 @@ const newCoffesArray = selectedCoffees.map(coffee => {
     };
 });
 
+const {width, height} = Dimensions.get('window');
+
 export function Home({ navigation }: RootStackScreenProps<'Home'>){
 
     const coffeeOptions = ['TRADICIONAIS', 'DOCES', 'ESPECIAIS'];
@@ -60,19 +64,15 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
         const productsCart = cart
         const amountCoffee = productsCart.length
         if (amountCoffee + 1 > amountCoffee){
-            console.log('ta entrando aqui as 14:26 =>', amountCoffee)
+            // console.log('ta entrando aqui as 14:26 =>', amountCoffee)
             // handleOpenModal()
             // {productsCart.length > 1 && <AlertModal/>}
     
             const lastCoffee = productsCart[productsCart.length - 1];
             setLastProduct(lastCoffee);
-        }
-       
-        // console.log('aqui as 14:15 =>', lastCoffee)
-        
+        }        
     }
 
-    
     function AlertModal() {        
         return <>
             <Modal 
@@ -195,12 +195,11 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
                         />
                     </Box>
 
-                    <Box width="100%" backgroundColor="white">
-                        <Box>
-                            <FlatList
-                                data={newCoffesArray} 
-                                keyExtractor={item => item.id}
-                                numColumns={1}
+                    <View>
+                        <View bg="white">
+                            <Carousel
+                                containerCustomStyle={{ overflow: 'visible' }}
+                                data={newCoffesArray}
                                 renderItem={({ item }) => (                                  
                                     <TypeCoffee
                                         id={item.id}
@@ -211,22 +210,19 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
                                         price={item.price}
                                     />               
                                 )}
+                                firstItem={1}
+                                loop={true}
+                                inactiveSlideScale={0.75}
+                                inactiveSlideOpacity={0.75}
+                                sliderWidth={width}
+                                itemWidth={width * 0.55}
+                                slideStyle={{ display: 'flex', alignItems: 'center' }}
+                            />
+                        </View>
+                    </View>
 
-                                horizontal
-                                showsHorizontalScrollIndicator={false}
-                                _contentContainerStyle={{ paddingBottom: 20 }}
-
-                                ListEmptyComponent={() => (
-                                    <VStack alignItems='center' justifyContent='center' flex={1} mt={16}>                                    
-                                        <Text fontFamily='body' color='gray.400' fontSize='md'>
-                                            Nenhum café encontrado
-                                        </Text>
-                                    </VStack>
-                                )}
-                            />  
-                        </Box>                  
-
-                        <Box top={-100}>
+                    <Box width="100%" backgroundColor="white">
+                        <Box mt={5}>
                             <Box borderWidth="1px" h={24} alignItems='flex-start' justifyContent='center' borderColor="gray.100" >
                                 <Text color="gray.700" fontSize="md" px="8" fontWeight="bold">
                                     Nossos cafés
