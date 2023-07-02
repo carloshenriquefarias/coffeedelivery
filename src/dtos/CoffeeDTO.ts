@@ -6,7 +6,7 @@ export interface CoffeeData {
     name: string;
     description: string;
     photo: ImageSourcePropType;
-    price: string;
+    price: number;
     onPress?: () => void;
 }
   

@@ -1,8 +1,9 @@
-import { Box, HStack, Text, VStack, useTheme, IconButton, Input } from 'native-base';
+import { Box, HStack, Text, VStack, useTheme, Button } from 'native-base';
 import { Images } from '@components/Image';
+import { AdjustingBox } from '@components/AdjustingBox';
 import { useState } from "react";
 import { Trash, Plus, Minus } from 'phosphor-react-native';
-import { StorageCartProps } from '../storage/storageCoffee';
+import { StorageCartProps, storageCoffeeSave, updateCartItem} from '../storage/storageCoffee';
 import { useCart } from '@hooks/useCart';
 
 type Props = {
@@ -14,33 +15,48 @@ export function ItemCartCard({ data, onRemove }: Props){
     const {colors, sizes} = useTheme();
     const { cart } = useCart();
     
-    const [quantity, setQuantity] = useState(1);
-    const unityCoffeePrice = parseFloat(data.price);
+    const [quantity, setQuantity] = useState(data.quantity);
+    const unityCoffeePrice = data.price;
     const totalCoffeePrice = (unityCoffeePrice * quantity).toFixed(2);
 
-    const calculateTotal = () => {
-        cart.map((item) => {
-            // const total = cart.reduce((acc, item) => acc + item.price, 0);
-            const informations = {
-                id: item.id,
-                quantity: item.quantity,
-                price: item.price
-            }
+    const [items, setItems] = useState(cart);
+      
+    const updateQuantity = (itemId: string, newQuantity: number) => {
+        setItems(prevItems =>
+            prevItems.map(item => {
+                if (item.id === itemId) {
+                return { ...item, quantity: newQuantity };
+                }
+            
+                return item;
+            })
+        );
+    };
 
-            // console.log('aqui as 17:08 =>', informations);       
-            return informations;           
-          
+    const [cartItems, setCartItems] = useState(cart);
+
+    const quantitiesCurrent = cartItems.map((item) => item.quantity);
+
+    const [quantities, setQuantities] = useState(() => {
+        const initialQuantities = cart.map((product) => product.quantity);
+        return initialQuantities;
+    });
+
+    const handleIncrease = (productId) => {
+        setCartItems((prevCartItems) => {
+          const updatedCartItems = prevCartItems.map((item) => {
+            if (item.id === productId) {
+              return { ...item, quantity: item.quantity + 1 };
+            }
+            return item;
+          });
+          return updatedCartItems;
         });
     };
 
-    function handleAddToCart(){
-        setQuantity(quantity + 1);
-    };
-    
-    function handleRemoveFromCart(){
-        if (quantity > 1) {
-            setQuantity(quantity - 1);
-        }
+    const getQuantity = (productId) => {
+        const item = cartItems.find((item) => item.id === productId);
+        return item ? item.quantity : 2; 
     };
 
     return(
@@ -62,10 +78,22 @@ export function ItemCartCard({ data, onRemove }: Props){
                     ml={1}
                     alt={'Foto'}
                 />
-            </Box>
+            </Box>          
 
             <VStack w="80%" justifyContent="flex-start">
+                {/* <HStack>
+                    {items.map(item => (
+                        <Text key={item.id}>
+                        <Text>{item.name}</Text>
+                        <Text>Quantidade: {item.quantity}</Text>
+                        <Button onPress={() => updateQuantity(item.id, item.quantity + 1)}>Aumentar quantidade</Button>
+                        <Button onPress={() => updateQuantity(item.id, item.quantity - 1)}>Diminuir quantidade</Button>
+                        </Text>
+                    ))}
+                </HStack> */}
+
                 <HStack justifyContent="space-between" alignItems="center" mr={5}>
+                    
                     <Text color="gray.700" textAlign="center" fontSize="md" mt={0}>
                         {data.name}
                     </Text>
@@ -77,41 +105,12 @@ export function ItemCartCard({ data, onRemove }: Props){
                     {data.size}
                 </Text>
                 
-                <HStack justifyContent="flex-start" alignItems='center' h={10} space={2}>
-                    <HStack justifyContent="space-between" alignItems='center' space={0}>
-                        <IconButton 
-                            icon={<Minus color={colors.purple[200]} 
-                            size={sizes[6]}/>}
-                            onPress={calculateTotal}
-                        />
-                        
-                        <Input
-                            onChangeText={(text) => setQuantity(parseInt(text, 10))}
-                            // keyboardType="numeric"
-                            textAlign="center"
-                            // value={calculateTotal()}
-                            value={quantity.toString()}
-                            w={10}
-                            borderColor="transparent"
-                            borderWidth={0}
-                            fontSize={16}
-                        />
-
-                        <IconButton 
-                            icon={<Plus color={colors.purple[200]}
-                            size={sizes[5]}/>}
-                            onPress={handleAddToCart}
-                        />           
-                    </HStack>
-
-                    <Box bg="gray.100" rounded={5}>
-                        <IconButton 
-                            icon={<Trash color={colors.purple[200]} 
-                            size={sizes[6]}/>}
-                            onPress={onRemove}
-                        />  
-                    </Box>                             
-                </HStack>
+                <AdjustingBox
+                    onDecrease={() => handleIncrease(1)}
+                    onIncrease={() => handleIncrease(1)}
+                    onRemove={onRemove}
+                    quantity={getQuantity(1)}
+                />               
             </VStack>
         </HStack>
     )

@@ -2,21 +2,13 @@ import { Box, HStack, Text, View } from "native-base";
 import { Images } from '@components/Image';
 import { ImageSourcePropType, Pressable, PressableProps } from "react-native";
 
-// import Animated, {
-//   Easing,
-//   interpolateColor,
-//   useAnimatedStyle,
-//   useSharedValue,
-//   withTiming,
-// } from 'react-native-reanimated';
-
 export type Coffee = PressableProps & {
     id: string;
     tags?: string;
     name: string;
     description: string;
     photo: ImageSourcePropType;
-    price: string;
+    price: number;
 }
 
 export function TypeCoffee({id, name, tags, description, price, photo, ...rest} : Coffee){

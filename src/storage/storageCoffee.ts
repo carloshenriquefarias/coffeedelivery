@@ -34,9 +34,7 @@ export async function storageCoffeeSave(coffeeData: CoffeeData) {
 
 export async function storageCoffeeGet() {
   const storage = await AsyncStorage.getItem('coffeeData');
-
   const coffee = storage ? (JSON.parse(storage) as CoffeeData) : undefined;
-
   return coffee;
 }
 
@@ -51,7 +49,7 @@ export type StorageCartProps = {
   name: string;
   size: string;
   quantity: number;
-  price: string;
+  price: number;
   photo: ImageSourcePropType;
 }
 
@@ -104,3 +102,23 @@ export async function storageProductRemove(productId: string) {
     throw error;
   }
 }
+
+export async function updateCartItem(newProduct: StorageCartProps) {
+  try {
+    let products = await storageProductGetAll();
+    const updatedProducts = products.map((product) => {
+      if (product.id === newProduct.id) {
+        return { ...product, ...newProduct };
+      }
+      return product;
+    });
+
+    const productsUpdated = JSON.stringify(updatedProducts);
+    await AsyncStorage.setItem(CART_STORAGE, productsUpdated);
+
+    return updatedProducts;
+  } catch (error) {
+    throw error;
+  }
+}
+

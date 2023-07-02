@@ -17,40 +17,25 @@ export function Cart({ navigation }: RootStackScreenProps<'Cart'>){
 
   const [loading, setLoading] = useState(false);
 
-  const [cartItems, setCartItems] = useState([]);
+  const [items, setItems] = useState(cart);
 
-  // const addToCart = (item) => {
-  //   setCartItems([...cartItems, item]);
+  // const updateQuantity = (itemId: string, newQuantity: number) => {
+  //   setItems(prevItems =>
+  //     prevItems.map(item => {
+  //       if (item.id === itemId) {
+  //         return { ...item, quantity: newQuantity };
+  //       }
+  //       return item;
+  //     })
+  //   );
   // };
 
-  const calculateTotal = () => {
-    let total = 0;
-    cart.map((item) => {
-      const quantity = item.quantity; // assume 1 se a quantidade não estiver definida
-      const price = parseFloat(item.price);
-      total = price * quantity;
+  const totalPrice = items.reduce((acc, item) => {
+    return acc + item.price * item.quantity;
+  }, 0);
 
-      const totals = cart.reduce((sumTotal, product) => {
-        sumTotal += price * quantity;   
-       
-        return sumTotal;
-      }, 0)
-
-      // console.log('aqui as 16:12 =>', totals);
-    });
-    return total.toFixed(2);
-  };
-
-  let total = 0;
-
-  for (let i = 0; i < cart.length; i++) {
-    total += parseFloat(cart[i].price);
-  }
-
-  const geralPrice = total.toFixed(2)
+  // console.log('Preço total as 14:36 =>:', totalPrice);
    
-
-
   function handleGoBackToHome() {
     setLoading(true)
     navigation.navigate('Home');
@@ -111,14 +96,8 @@ export function Cart({ navigation }: RootStackScreenProps<'Cart'>){
          
           <HStack justifyContent="flex-start" alignItems='center' space={2}>
             <Text color="gray.800" fontWeight="bold" textAlign="center" fontSize="xs">R$</Text>
-            <Text color="gray.800" fontWeight="bold" textAlign="center" fontSize="lg">{geralPrice}</Text>
+            <Text color="gray.800" fontWeight="bold" textAlign="center" fontSize="lg">{totalPrice}</Text>
           </HStack>
-  
-
-          {/* <HStack justifyContent="flex-start" alignItems='center' space={2}>
-            <Text color="gray.800" fontWeight="bold" textAlign="center" fontSize="xs">R$</Text>
-            <Text color="gray.800" fontWeight="bold" textAlign="center" fontSize="lg">9,99</Text>
-          </HStack>             */}
         </HStack>
 
         <HStack alignItems='center' mt={2} px={8} mb={10}>

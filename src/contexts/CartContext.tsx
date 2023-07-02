@@ -1,4 +1,5 @@
 import { createContext, useState, ReactNode, useEffect } from 'react';
+import {CoffeeData} from '@dtos/CoffeeDTO'
 import { StorageCartProps, storageProductSave, storageProductRemove, storageProductGetAll} from '../storage/storageCoffee';
 
 export type CartContextDataProps = {
@@ -9,6 +10,10 @@ export type CartContextDataProps = {
 
 type CartContextProviderProps = {
   children: ReactNode;
+}
+
+export interface CartItem extends CoffeeData {
+  quantity: number;
 }
 
 export const CartContext = createContext<CartContextDataProps>({} as CartContextDataProps);
