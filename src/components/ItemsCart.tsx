@@ -1,8 +1,11 @@
-import { Box, FlatList, ScrollView, VStack, useToast} from 'native-base';
+import { Box, FlatList, IconButton, ScrollView, VStack, View, theme, useToast} from 'native-base';
 import { ImageSourcePropType } from 'react-native';
 import { useCart } from '../hooks/useCart';
 import { ItemCartCard } from './ItemCartCard';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { Swipeable } from "react-native-gesture-handler"
+import { Trash } from 'phosphor-react-native';
+import Animated, { SlideOutRight } from 'react-native-reanimated';
 
 export interface Coffee {
     id: string;
@@ -17,8 +20,11 @@ export function ItemsCart(){
 
     const toast = useToast();
     const { cart, removeProductCart } = useCart();
+    const swipeableRef = useRef<Swipeable[]>([])
 
-    async function handleItemRemove(productId: string) {
+    async function handleItemRemove(productId: string, index: number) {
+        swipeableRef.current?.[index].close();
+
         try {
           await removeProductCart(productId);
     
@@ -47,11 +53,45 @@ export function ItemsCart(){
                     <FlatList
                         data={cart}
                         keyExtractor={item => item.id}
-                        renderItem={({ item }) => (
-                            <ItemCartCard
-                                data={item}
-                                onRemove={() => handleItemRemove(item.id)}
-                            />
+                        renderItem={({ item, index }) => (
+                            <Animated.View
+                                key={item.id}
+                                // entering={SlideInRight}
+                                exiting={SlideOutRight}
+                                // layout={Layout.springify()}
+                            >
+                                <Swipeable
+                                    ref={ref => {
+                                        if (ref) {
+                                            swipeableRef.current.push(ref)
+                                        }
+                                    }}
+                                    overshootLeft={false}
+                                    leftThreshold={10}
+                                    renderRightActions={() => null}
+                                    renderLeftActions={() => (
+                                        <View 
+                                            width={90}
+                                            height={120}
+                                            rounded={6}
+                                            background="red.200"
+                                            alignItems="center"
+                                            justifyContent="center"
+                                        >
+                                            <IconButton
+                                                icon={<Trash size={32} color={theme.colors.gray[100]} />}
+                                                onPress={() => handleItemRemove(item.id, index)}
+                                            />
+                                            
+                                        </View>
+                                    )}
+                                >
+                                    <ItemCartCard
+                                        data={item}
+                                        onRemove={() => handleItemRemove(item.id, index)}
+                                    />
+                                </Swipeable>
+                            </Animated.View>
                         )}
                         _contentContainerStyle={{ alignItems: 'center', paddingBottom: 20 }}
                         showsVerticalScrollIndicator={false}

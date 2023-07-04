@@ -1,4 +1,4 @@
-import {Box, ScrollView, StatusBar, Text, VStack, useTheme, Center, Container} from 'native-base';
+import {Box, Text, VStack, Center } from 'native-base';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 
 import { useState } from 'react';
@@ -8,7 +8,9 @@ import { Images } from '@components/Image';
 import { ButtonDefault } from '@components/Button';
 
 import { RootStackScreenProps } from 'src/@types/navigation';
+
 import Illustration from '@assets/Illustration.png';
+import Animated, { BounceIn, BounceInDown, BounceInLeft } from 'react-native-reanimated';
 
 export function OrderFinished({ navigation }: RootStackScreenProps<'OrderFinished'>){
 
@@ -25,7 +27,7 @@ export function OrderFinished({ navigation }: RootStackScreenProps<'OrderFinishe
       <VStack flex={1}>            
         <Box width="100%" h="900px" backgroundColor="gray.50">
           <Center backgroundColor="gray.50" mt={40} width="100%">
-            <Box>
+            <Animated.View entering={BounceInLeft.duration(2500)}>
               <Images 
                 source={Illustration} 
                 key={1} 
@@ -33,24 +35,30 @@ export function OrderFinished({ navigation }: RootStackScreenProps<'OrderFinishe
                 ml={1}
                 alt={'Foto'}
               />
-            </Box>
-            
-            <Text color="yellow.300" fontWeight="bold" textAlign="center" fontSize={"xl"} mt={5}>
-              Uhu! Pedido Confirmado!
-            </Text>
-            <Text color="gray.600" textAlign="center" fontSize={"md"} mt={5} px={8}>
-              Agora é so aguardar que o café já chegará para você!
-            </Text>
-            {/* <ButtonDefault size="half" title='ADICIONAR' mr={2} onPress={handleGoBackToHome} isLoading={loading}/>                                */}
-            <ButtonDefault 
-              title='IR PARA A HOME' 
-              bg="purple.300" 
-              size="half" 
-              mt={8} 
-              isLoading={loading}
-              onPress={handleGoBackToHome}
-            />
-          </Center>  
+            </Animated.View>
+
+            <Animated.View entering={BounceIn.duration(3000)}>            
+              <Text color="yellow.300" fontWeight="bold" textAlign="center" fontSize={"xl"} mt={5}>
+                Uhu! Pedido Confirmado!
+              </Text>
+              <Text color="gray.600" textAlign="center" fontSize={"md"} mt={5} px={8}>
+                Agora é so aguardar que o café já chegará para você!
+              </Text>
+            </Animated.View>                     
+          </Center> 
+
+          <Animated.View entering={BounceInDown.duration(3000)}>  
+            <Box width="100%" mt={5} backgroundColor="gray.50" justifyContent="center" alignItems="center">    
+              <ButtonDefault 
+                title='IR PARA A HOME' 
+                bg="purple.300" 
+                size="half"                 
+                isLoading={loading}
+                onPress={handleGoBackToHome}
+              />
+            </Box> 
+          </Animated.View>  
+        
         </Box>
       </VStack>
     </SafeAreaView>    

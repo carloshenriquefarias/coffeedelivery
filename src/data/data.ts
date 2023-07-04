@@ -64,7 +64,7 @@ export const coffeeData: CoffeeData[] = [
     name: "Café com Leite",
     description: "Meio a meio de expresso tradicional com leite vaporizado",
     photo: Leite,
-    price: 9.50,
+    price: 9.55,
   },
   {
     id: '6',
@@ -72,7 +72,7 @@ export const coffeeData: CoffeeData[] = [
     name: "Latte",
     description: "Uma dose de café expresso com o dobro de leite e espuma cremosa",
     photo: Latte,
-    price: 9.60,
+    price: 9.65,
   },
   {
     id: '7',
@@ -81,7 +81,7 @@ export const coffeeData: CoffeeData[] = [
     description:
       "Bebida com canela feita de doses iguais de café, leite e espuma",
     photo: Capuccino,
-    price: 9.80,
+    price: 9.85,
   },
   {
     id: '8',
@@ -139,6 +139,6 @@ export const coffeeData: CoffeeData[] = [
     name: "Irlandês",
     description: "Bebida a base de café, uísque irlandês, açúcar e chantilly",
     photo: Irlandes,
-    price: 9.50,
+    price: 9.55,
   },
 ];
