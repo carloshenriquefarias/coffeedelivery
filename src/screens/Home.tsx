@@ -1,5 +1,5 @@
-import { Box, FlatList, HStack, ScrollView, Text, VStack, useTheme, SectionList, Modal, IconButton, View } from 'native-base';
-import { SafeAreaView, ImageSourcePropType, Dimensions} from 'react-native';
+import { Box, FlatList, HStack, ScrollView, Text, VStack, useTheme, SectionList, Modal, IconButton, View, theme } from 'native-base';
+import { SafeAreaView, ImageSourcePropType, Dimensions, StatusBar} from 'react-native';
 import { useState, useCallback} from 'react';
 
 import { BoxCondition } from '@components/BoxCondition';
@@ -17,7 +17,16 @@ import { useCart } from '@hooks/useCart';
 import { useFocusEffect } from '@react-navigation/native';
 
 import Carousel from 'react-native-snap-carousel';
-import Animated, { BounceInDown, BounceInRight, BounceInUp } from 'react-native-reanimated';
+import Animated, { 
+    BounceInDown, 
+    BounceInRight, 
+    BounceInUp, 
+    useAnimatedScrollHandler,
+    useSharedValue,
+    useAnimatedStyle,
+    interpolate,
+    Extrapolate,
+} from 'react-native-reanimated';
 
 interface CoffeeData {
     id: string;
@@ -55,6 +64,43 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
     
     const { cart } = useCart();
     const { colors, sizes} = useTheme();
+
+    const scrollY = useSharedValue(0);
+
+    const scrollHandler = useAnimatedScrollHandler((event) => {
+        scrollY.value = event.contentOffset.y;
+        console.log(scrollY.value)
+    });
+
+    const statusBarStyle = useAnimatedStyle(() => {
+        const opacity = interpolate(scrollY.value, [740, 900], [0, 1], Extrapolate.CLAMP);
+        const backgroundColor = interpolate(scrollY.value, [50, 740], [0, 1], Extrapolate.CLAMP);
+        const barStyle = opacity > 0.5 ? colors.gray[300] : colors.gray[600];
+        const interpolatedBackgroundColor = backgroundColor > 0.5 ? colors.gray[300] : colors.gray[700];
+
+        return {
+            opacity,
+            backgroundColor: interpolatedBackgroundColor,
+            barStyle,
+        };
+    });
+
+    const fixedProgressBarStyles = useAnimatedStyle(() => {
+        return {
+          opacity: interpolate(scrollY.value, [50, 90], [0, 10], Extrapolate.CLAMP),
+          transform: [
+            {
+              translateY: interpolate(scrollY.value, [750, 900], [-740, 600], Extrapolate.CLAMP),
+            },
+          ],
+        }
+    })
+
+    const headerStyles = useAnimatedStyle(() => {
+        return {
+          opacity: interpolate(scrollY.value, [60, 90], [1, 0], Extrapolate.CLAMP),
+        }
+    })    
     
     const sections: { [key: string]: { title: string; data: CoffeeData[] } } = coffeeData.reduce(
         (acc, coffee) => {
@@ -175,12 +221,19 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
     },[]))
     
     return(
-        <ScrollView 
+    <>
+        <Animated.View style={statusBarStyle}>
+            <StatusBar translucent animated barStyle={statusBarStyle.backgroundColor} />
+        </Animated.View>
+
+        <Animated.ScrollView 
             contentContainerStyle={{ flexGrow: 1 }} 
             showsVerticalScrollIndicator={false}
+            onScroll={scrollHandler}
+            scrollEventThrottle={16}
         >
             <SafeAreaView>
-                <VStack flex={1} bg="gray.50"> 
+                <VStack flex={1}> 
                     <Animated.View entering={BounceInUp.duration(3000).delay(1000)}>            
                         <Box width="100%" h="400px" backgroundColor="gray.800">
                             <Header goToCart={handleGoToCart} quantityCoffee={cart.length}/>
@@ -194,7 +247,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
                         </Box>
                     </Animated.View>                    
                    
-                    <View bg="white">
+                    <View bg="white" zIndex={1}>
                         <Animated.View entering={BounceInRight.duration(4000).delay(2000)}> 
                             <Carousel
                                 containerCustomStyle={{ overflow: 'visible' }}
@@ -260,6 +313,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
                 </VStack>
                 <AlertModal/>
             </SafeAreaView>
-        </ScrollView>      
+        </Animated.ScrollView> 
+        </>     
     );
 }
