@@ -10,7 +10,7 @@ import { useCallback, useState } from 'react';
 import { coffeeData } from '../data/data';
 import { Plus, Minus, ShoppingCart, ArrowLeft} from 'phosphor-react-native';
 
-import { BoxCondition } from '@components/BoxCondition';
+import { SizeSelected } from '@components/SizeSelected';
 import { ButtonDefault } from '@components/Button';
 import { Images } from '@components/Image';
 import { Loading } from '@components/Loading';
@@ -45,8 +45,9 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
   const [size, setSize] = useState(true);
 
   async function handleAddProductToCart() {
-    try {
 
+    try {
+      
       setLoading(true);
 
       const coffeeSelectedData = {
@@ -198,7 +199,7 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
                 data={coffeeSizes}
                 keyExtractor={item => item}
                 renderItem={({ item }) => (
-                  <BoxCondition 
+                  <SizeSelected 
                     size="large"
                     name={item}
                     isActive={sizeSelected.toLocaleUpperCase() 
