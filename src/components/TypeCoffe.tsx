@@ -15,14 +15,13 @@ export function TypeCoffee({id, name, tags, description, price, photo, ...rest} 
     return(
         <Pressable>
             <Box 
-                bg="gray.50" 
+                bg="white" 
                 w={220} 
                 h={350} 
                 mt={5}
                 mb={5}
-                // top={-70} 
                 mx={4}
-
+                
                 style={{
                     borderTopLeftRadius: 5,
                     borderTopRightRadius: 25,
@@ -46,13 +45,12 @@ export function TypeCoffee({id, name, tags, description, price, photo, ...rest} 
                         shadowRadius: 30,
                         shadowOffset: {width: 0, height: 40},
                         shadowOpacity: 0.8,
-                        marginTop: -10,
                     }}
                 >
                     <Images 
                         source={photo} 
                         key={id} 
-                        size={24}  
+                        size={32}  
                         mr={1}
                         alt={'Foto'}
                     />

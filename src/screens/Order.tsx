@@ -177,7 +177,7 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
               />  
             </Box>
 
-            <Box justifyContent="center" alignItems='center' bottom={-10}>
+            <Box justifyContent="center" alignItems='center'>
               <Images 
                 source={coffeeImage} 
                 key={1} 

@@ -222,9 +222,9 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
     
     return(
     <>
-        <Animated.View style={statusBarStyle}>
+        {/* <Animated.View style={statusBarStyle}>
             <StatusBar translucent animated barStyle={statusBarStyle.backgroundColor} />
-        </Animated.View>
+        </Animated.View> */}
 
         <Animated.ScrollView 
             contentContainerStyle={{ flexGrow: 1 }} 
@@ -233,7 +233,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
             scrollEventThrottle={16}
         >
             <SafeAreaView>
-                <VStack flex={1}> 
+                <VStack flex={1} backgroundColor="white"> 
                     <Animated.View entering={BounceInUp.duration(3000).delay(1000)}>            
                         <Box width="100%" h="400px" backgroundColor="gray.800">
                             <Header goToCart={handleGoToCart} quantityCoffee={cart.length}/>
@@ -247,7 +247,11 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
                         </Box>
                     </Animated.View>                    
                    
-                    <View bg="white" zIndex={1}>
+                    <View 
+                        bg="white" 
+                        backgroundColor='rgba(0, 0, 0, 0)'
+                        top={-120}
+                    >
                         <Animated.View entering={BounceInRight.duration(4000).delay(2000)}> 
                             <Carousel
                                 containerCustomStyle={{ overflow: 'visible' }}
@@ -274,7 +278,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
                     </View>
 
                     <Animated.View entering={BounceInDown.duration(3000).delay(1000)}>                   
-                        <Box width="100%" backgroundColor="white">
+                        <Box width="100%" backgroundColor="white" top={-120}>
                             <Box mt={5}>
                                 <Box borderWidth="1px" h={24} alignItems='flex-start' justifyContent='center' borderColor="gray.100" >
                                     <Text color="gray.700" fontSize="md" px="8" fontWeight="bold">
