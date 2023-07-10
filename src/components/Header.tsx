@@ -23,7 +23,7 @@ export function Header({ goToCart, quantityCoffee }: Props){
                     onPress={goToCart}
                     icon={ <ShoppingCart color={colors.yellow[300]} size={sizes[5]}/>}
                 />
-                {cart.length > 1 && 
+                {cart.length > 0 && 
                     <Box rounded="full" w={5} h={5} bg="purple.200" top={-15} left={-15}>
                         <Text color="gray.200" fontWeight="bold" textAlign="center" fontSize="xs">
                             {quantityCoffee}

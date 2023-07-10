@@ -42,7 +42,7 @@ export async function storageCoffeeRemove() {
   await AsyncStorage.removeItem(COFFEE_STORAGE);
 }
 
-const CART_STORAGE = '@IGNITESHOES_CART';
+const CART_STORAGE = '@coffeedelivery:coffee2';
 
 export type StorageCartProps = {
   id: string;
@@ -65,7 +65,7 @@ export async function storageProductGetAll() {
 }
 
 export async function storageProductSave(newProduct: StorageCartProps) {
-  try {
+  try {   
     let products = await storageProductGetAll();
     const productExists = products.filter(product => product.id === newProduct.id);
 
@@ -102,6 +102,55 @@ export async function storageProductRemove(productId: string) {
     throw error;
   }
 }
+
+export async function storageAddItem(productId: string) {
+  try {
+
+    let products = await storageProductGetAll();
+
+    const updatedProducts = products.map((item) => {
+      if (item.id === productId) {
+        return {
+          ...item,
+          quantity: item.id === productId ? item.quantity + 1 : item.quantity
+        };
+      }
+      return item;
+    });
+
+    await AsyncStorage.setItem(CART_STORAGE, JSON.stringify(updatedProducts));
+
+    return updatedProducts;
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function storageRemoveItem(productId: string) {
+  try {
+
+    let products = await storageProductGetAll();
+
+    const updatedProducts = products.map((item) => {
+      if (item.id === productId) {
+        return {
+          ...item,
+          quantity: item.id === productId ? item.quantity - 1 : item.quantity
+        };
+      }
+      return item;
+    });
+
+    await AsyncStorage.setItem(CART_STORAGE, JSON.stringify(updatedProducts));
+
+    return updatedProducts;
+
+  } catch (error) {
+    throw error;
+  }
+}
+
 
 export async function updateCartItem(newProduct: StorageCartProps) {
   try {

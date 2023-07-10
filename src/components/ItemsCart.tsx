@@ -1,25 +1,26 @@
 import { Box, FlatList, IconButton, ScrollView, VStack, View, theme, useToast} from 'native-base';
 import { ImageSourcePropType } from 'react-native';
-import { useCart } from '../hooks/useCart';
 import { ItemCartCard } from './ItemCartCard';
-import { useRef, useState } from 'react';
 import { Swipeable } from "react-native-gesture-handler"
 import { Trash } from 'phosphor-react-native';
-import Animated, { SlideOutRight } from 'react-native-reanimated';
+import { useCart } from '../hooks/useCart';
+import { useRef, useState } from 'react';
 
+import Animated, { SlideOutRight } from 'react-native-reanimated';
 export interface Coffee {
     id: string;
     tags?: string[];
     name: string;
     description: string;
     photo: ImageSourcePropType;
-    price: string;
+    price: number;
 }
 
 export function ItemsCart(){
 
+    const { cart, removeProductCart, addItemProductCart, removeItemProductCart} = useCart();
+
     const toast = useToast();
-    const { cart, removeProductCart } = useCart();
     const swipeableRef = useRef<Swipeable[]>([])
 
     async function handleItemRemove(productId: string, index: number) {
@@ -40,6 +41,32 @@ export function ItemsCart(){
             placement: 'top',
             bgColor: 'red.500'
           });
+        }
+    }
+
+    async function handleAddItem(productId: string, index: number) {
+        try {
+            await addItemProductCart(productId);
+    
+        } catch (error) {
+            toast.show({
+                title: 'Não foi possível aumentar a quantidade do produto',
+                placement: 'top',
+                bgColor: 'red.500'
+            });
+        }
+    }
+
+    async function handleRemoveItemCart(productId: string, index: number) {
+        try {
+            await removeItemProductCart(productId);
+    
+        } catch (error) {
+            toast.show({
+                title: 'Não foi possível diminuir a quantidade do produto',
+                placement: 'top',
+                bgColor: 'red.500'
+            });
         }
     }
 
@@ -81,14 +108,16 @@ export function ItemsCart(){
                                             <IconButton
                                                 icon={<Trash size={32} color={theme.colors.gray[100]} />}
                                                 onPress={() => handleItemRemove(item.id, index)}
-                                            />
-                                            
+                                            />                                            
                                         </View>
                                     )}
                                 >
                                     <ItemCartCard
                                         data={item}
                                         onRemove={() => handleItemRemove(item.id, index)}
+                                        addQuantity={() => handleAddItem(item.id, index)}
+                                        removeQuantity={() => handleRemoveItemCart(item.id, index)}
+                                        quantity={item.quantity}
                                     />
                                 </Swipeable>
                             </Animated.View>

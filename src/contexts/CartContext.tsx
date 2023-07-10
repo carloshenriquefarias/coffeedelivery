@@ -1,11 +1,19 @@
 import { createContext, useState, ReactNode, useEffect } from 'react';
-import {CoffeeData} from '@dtos/CoffeeDTO'
-import { StorageCartProps, storageProductSave, storageProductRemove, storageProductGetAll} from '../storage/storageCoffee';
+import { CoffeeData } from '@dtos/CoffeeDTO'
+import { StorageCartProps, 
+  storageProductSave, 
+  storageProductRemove, 
+  storageProductGetAll, 
+  storageAddItem,
+  storageRemoveItem
+} from '../storage/storageCoffee';
 
 export type CartContextDataProps = {
   addProductCart: (newProduct: StorageCartProps) => Promise<void>;
   removeProductCart: (productId: string) => Promise<void>;
   cart: StorageCartProps[];
+  addItemProductCart: (productId: string) => Promise<void>;
+  removeItemProductCart: (productId: string) => Promise<void>;
 }
 
 type CartContextProviderProps = {
@@ -24,6 +32,7 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
   async function addProductCart(newProduct: StorageCartProps) {
     try {
       const storageResponse = await storageProductSave(newProduct);
+      
       setCart(storageResponse);
     } catch (error) {
       throw error;
@@ -33,6 +42,24 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
   async function removeProductCart(productId: string) {
     try {
       const response = await storageProductRemove(productId);
+      setCart(response);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function addItemProductCart(productId: string) {
+    try {
+      const response = await storageAddItem(productId);
+      setCart(response);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function removeItemProductCart(productId: string) {
+    try {
+      const response = await storageRemoveItem(productId);
       setCart(response);
     } catch (error) {
       throw error;
@@ -50,6 +77,8 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
       cart,
       addProductCart,
       removeProductCart,
+      addItemProductCart,
+      removeItemProductCart
     }}>
       {children}
     </CartContext.Provider>

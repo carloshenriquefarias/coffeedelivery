@@ -1,14 +1,10 @@
-import {Box, HStack, ScrollView, StatusBar, Text, VStack, useTheme, IconButton, Center} from 'native-base';
-import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
+import { Box, HStack, ScrollView, StatusBar, Text, VStack, useTheme, IconButton, Center} from 'native-base';
 
-import { useState } from 'react';
 import { ArrowLeft, ShoppingCart} from 'phosphor-react-native';
-
 import { ButtonDefault } from '@components/Button';
 import { ItemsCart } from '@components/ItemsCart';
-
 import { RootStackScreenProps } from 'src/@types/navigation';
-import { storageProductGetAll, storageProductSave } from '@storage/storageCoffee';
+import { useState } from 'react';
 import { useCart } from '@hooks/useCart';
 
 export function Cart({ navigation }: RootStackScreenProps<'Cart'>){
@@ -17,10 +13,10 @@ export function Cart({ navigation }: RootStackScreenProps<'Cart'>){
   const { cart } = useCart();
 
   const [loading, setLoading] = useState(false);
-  const [items, setItems] = useState(cart);
 
-  const totalPrice = items.reduce((acc, item) => {
-    return acc + item.price * item.quantity;
+  const total = cart.reduce((accumulator, item) => {
+    const subtotal = item.quantity * item.price;
+    return accumulator + subtotal;
   }, 0);
    
   function handleGoBackToHome() {
@@ -29,8 +25,8 @@ export function Cart({ navigation }: RootStackScreenProps<'Cart'>){
     setLoading(false)
   }
 
-  function handleConfirmOrder() {
-    setLoading(true)
+  async function handleConfirmOrder() {
+    await setLoading(true)
     navigation.navigate('OrderFinished');
     setLoading(false)
   }
@@ -76,7 +72,7 @@ export function Cart({ navigation }: RootStackScreenProps<'Cart'>){
             
               <HStack justifyContent="flex-start" alignItems='center' space={2}>
                 <Text color="gray.800" fontWeight="bold" textAlign="center" fontSize="xs">R$</Text>
-                <Text color="gray.800" fontWeight="bold" textAlign="center" fontSize="lg">{totalPrice}</Text>
+                <Text color="gray.800" fontWeight="bold" textAlign="center" fontSize="lg">{total}</Text>
               </HStack>
             </HStack>
 

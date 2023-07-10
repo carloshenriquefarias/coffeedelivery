@@ -58,10 +58,13 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
         price: coffeeInformations?.price,
         photo: coffeeInformations?.photo,
       }
+      
 
       await addProductCart(
         coffeeSelectedData
       );
+
+      console.log('aqui as 15:21', coffeeSelectedData);
 
       // toast.show({
       //   title: 'Produto adicionado no carrinho',

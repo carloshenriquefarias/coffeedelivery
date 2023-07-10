@@ -69,7 +69,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
 
     const scrollHandler = useAnimatedScrollHandler((event) => {
         scrollY.value = event.contentOffset.y;
-        console.log(scrollY.value)
+        // console.log(scrollY.value)
     });
 
     const statusBarStyle = useAnimatedStyle(() => {
