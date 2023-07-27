@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { coffeeData} from '../data/data'
 import { CoffeeData } from '@dtos/CoffeeDTO';
-import { COFFEE_STORAGE } from './storageConfig';
+import { COFFEE_STORAGE, CART_STORAGE } from './storageConfig';
 import { ImageSourcePropType } from 'react-native';
 
 const coffeeDataString = JSON.stringify(coffeeData);
@@ -42,8 +42,6 @@ export async function storageCoffeeRemove() {
   await AsyncStorage.removeItem(COFFEE_STORAGE);
 }
 
-const CART_STORAGE = '@coffeedelivery:coffee2';
-
 export type StorageCartProps = {
   id: string;
   name: string;
@@ -57,7 +55,7 @@ export async function storageProductGetAll() {
   try {
     const storage = await AsyncStorage.getItem(CART_STORAGE);
     const products: StorageCartProps[] = storage ? JSON.parse(storage) : [];
-    return products;
+    return products;    
 
   } catch (error) {
     throw error;
@@ -151,7 +149,6 @@ export async function storageRemoveItem(productId: string) {
   }
 }
 
-
 export async function updateCartItem(newProduct: StorageCartProps) {
   try {
     let products = await storageProductGetAll();
@@ -170,4 +167,5 @@ export async function updateCartItem(newProduct: StorageCartProps) {
     throw error;
   }
 }
+
 

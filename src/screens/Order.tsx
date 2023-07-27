@@ -64,17 +64,9 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
         coffeeSelectedData
       );
 
-      console.log('aqui as 15:21', coffeeSelectedData);
-
-      // toast.show({
-      //   title: 'Produto adicionado no carrinho',
-      //   placement: 'top',
-      //   bgColor: 'green.500'
-      // });
-
       setLoading(false);
 
-      navigation.navigate('Home');
+      navigation.navigate('Home', {new_s: true});
       
     } catch (error) {
       toast.show({

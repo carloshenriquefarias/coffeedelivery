@@ -6,7 +6,7 @@ import { Order } from '@screens/Order';
 import { OrderFinished } from '@screens/OrderFinished';
 
 type AppRoutes = {
-  home: undefined;
+  home:  {new_s: boolean};
   cart: {coffee_id: string};
   order: {coffee_id: string};
   orderFinished: undefined;

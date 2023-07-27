@@ -1,5 +1,5 @@
 import { AdjustingBox } from '@components/AdjustingBox';
-import { Box, HStack, Text, VStack, useTheme, Button } from 'native-base';
+import { Box, HStack, Text, VStack} from 'native-base';
 import { Images } from '@components/Image';
 import { StorageCartProps} from '../storage/storageCoffee';
 

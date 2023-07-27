@@ -1,12 +1,13 @@
-import { Box, FlatList, HStack, ScrollView, Text, VStack, useTheme, SectionList, Modal, IconButton, View, theme } from 'native-base';
-import { SafeAreaView, ImageSourcePropType, Dimensions, StatusBar} from 'react-native';
-import { useState, useCallback} from 'react';
+import { Box, FlatList, HStack, Text, VStack, useTheme, SectionList, Modal, 
+    IconButton, View} from 'native-base'
+;
+import { SafeAreaView, ImageSourcePropType, Dimensions, ScrollView} from 'react-native';
+import { useState, useCallback, useRef} from 'react';
 
 import { BoxCondition } from '@components/BoxCondition';
 import { CardCoffee } from '@components/CardCoffee';
 import { Header } from '@components/Header';
 import { InputSearch } from '@components/InputSearch';
-import { ModalMenseger } from '@components/ModalMenseger';
 import { TypeCoffee } from '@components/TypeCoffe';
 
 import { coffeeData} from '../data/data';
@@ -14,7 +15,7 @@ import { RootStackScreenProps } from 'src/@types/navigation';
 
 import { ShoppingCart, ArrowRight} from 'phosphor-react-native';
 import { useCart } from '@hooks/useCart';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 
 import Carousel from 'react-native-snap-carousel';
 import Animated, { 
@@ -26,7 +27,9 @@ import Animated, {
     useAnimatedStyle,
     interpolate,
     Extrapolate,
+    withTiming,
 } from 'react-native-reanimated';
+import { StorageCartProps } from '@storage/storageCoffee';
 
 interface CoffeeData {
     id: string;
@@ -38,39 +41,68 @@ interface CoffeeData {
     onPress?: () => void;
 }
 
-const coffeeNames = ['Latte', 'Mocaccino', 'Irlandês'];
-const selectedCoffees = coffeeData.filter(coffee => coffeeNames.includes(coffee.name));
-const newCoffesArray = selectedCoffees.map(coffee => {
-    return {
-        id: coffee.id,
-        tags: coffee.tags,
-        name: coffee.name,
-        description: coffee.description,
-        photo: coffee.photo,
-        price: coffee.price,
-    };
-});
-
-const {width} = Dimensions.get('window');
+// type RouteParamsProps = {
+//     new_s: string;
+// }
 
 export function Home({ navigation }: RootStackScreenProps<'Home'>){
-    
-    const [conditionSelected, setConditionSelected] = useState('TRADICIONAIS'); 
-    const [filteredData, setFilteredData] = useState<CoffeeData[]>([]);
-    const [search, setSearch] = useState('')
-    const [newCoffee, setNewCoffee] = useState(1)
-    const [modalVisible, setModalVisible] = useState(false);
-    const [lastProduct, setLastProduct] = useState({});
-    
-    const { cart } = useCart();
-    const { colors, sizes} = useTheme();
+
+    const route = useRoute();
+    const { params } = route;
+
+    const coffeeNames = ['Latte', 'Mocaccino', 'Irlandês'];
+    const selectedCoffees = coffeeData.filter(coffee => coffeeNames.includes(coffee.name));   
 
     const scrollY = useSharedValue(0);
 
-    const scrollHandler = useAnimatedScrollHandler((event) => {
+    const handleScroll = useAnimatedScrollHandler((event) => {
         scrollY.value = event.contentOffset.y;
-        // console.log(scrollY.value)
     });
+
+    const scrollViewRef = useRef<ScrollView>(null);
+
+    function scrollToPositionTraditionalCoffee () {
+        const targetY = 770;
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollTo({ y: targetY, animated: true});
+        }
+    };
+
+    function scrollToPositionSweetCoffee () {
+        const targetY = 2120;
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollTo({ y: targetY, animated: true});
+        }
+    };        
+
+    function scrollToPositionSpecialCoffee () {
+        const targetY = 2720;
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollTo({ y: targetY, animated: true});
+        }
+    };
+
+    const newCoffesArray = selectedCoffees.map(coffee => {
+        return {
+            id: coffee.id,
+            tags: coffee.tags,
+            name: coffee.name,
+            description: coffee.description,
+            photo: coffee.photo,
+            price: coffee.price,
+        };
+    });
+
+    const [conditionSelected, setConditionSelected] = useState('TRADICIONAIS'); 
+    const [filteredData, setFilteredData] = useState<CoffeeData[]>([]);
+    const [search, setSearch] = useState('')
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [lastProduct, setLastProduct] = useState({});
+
+    const { cart } = useCart();
+    const { colors, sizes } = useTheme();
+    const { width } = Dimensions.get('window');
 
     const statusBarStyle = useAnimatedStyle(() => {
         const opacity = interpolate(scrollY.value, [740, 900], [0, 1], Extrapolate.CLAMP);
@@ -116,16 +148,23 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
     );       
         
     const coffeeOptions = ['TRADICIONAIS', 'DOCES', 'ESPECIAIS'];
-    const sectionsArray = Object.values(sections);    
+    const sectionsArray = Object.values(sections);  
+    
+    function checkItemsCart(){
 
-    function newProductOnCart(){
-        const productsCart = cart
-        const amountCoffee = productsCart.length
-        if (amountCoffee + 1 > amountCoffee){
-            // handleOpenModal()    
-            const lastCoffee = productsCart[productsCart.length - 1];
-            setLastProduct(lastCoffee);
-        }        
+        const acc = 2
+        const numberOfItems = cart.length
+
+        if(numberOfItems > acc){
+            handleOpenModal();
+        }
+    }
+
+    function openModalLastDataCart(){
+        const lastCoffee = cart[cart.length - 1];
+        setLastProduct(lastCoffee); 
+        checkItemsCart();       
+        // handleOpenModal(); 
     }
 
     function AlertModal() {        
@@ -153,12 +192,12 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
                                     </Box>
                                     <Box rounded="full" w={5} h={5} bg="purple.200" top={-18} left={-18}>
                                         <Text color="gray.200" fontWeight="bold" textAlign="center" fontSize="xs">
-                                            {/* {lastProduct.quantity} */}
+                                            {lastProduct.quantity}
                                         </Text>
                                     </Box>                     
                                 </HStack>
                                 <Text color="gray.500">
-                                    {/* {lastProduct.quantity} unidades de cafe {lastProduct.name} de {lastProduct.size} foi adicionado no carrinho! */}
+                                    {lastProduct.quantity} unidades de cafe {lastProduct.name} de {lastProduct.size} foi adicionado no carrinho!
                                 </Text>  
                             </HStack>   
                             <HStack justifyContent="flex-start" alignItems='center' space={2}>
@@ -203,7 +242,19 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
     }
 
     function handleCondition(item: string) {       
-        setConditionSelected(item);                   
+        setConditionSelected(item);  
+
+        if(item === 'TRADICIONAIS'){
+            scrollToPositionTraditionalCoffee()
+        }
+        
+        if(item === 'DOCES'){
+            scrollToPositionSweetCoffee()
+        }
+        
+        if(item === 'ESPECIAIS'){
+            scrollToPositionSpecialCoffee()
+        }
     }
 
     const handleSearch = (text: string) => {
@@ -217,8 +268,11 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
     }
 
     useFocusEffect(useCallback(() => {
-        newProductOnCart();
-    },[]))
+        const state = (typeof params == undefined) ? false : true
+        if (state) {
+            openModalLastDataCart();
+        }
+    },[cart]))
     
     return(
     <>
@@ -229,8 +283,9 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
         <Animated.ScrollView 
             contentContainerStyle={{ flexGrow: 1 }} 
             showsVerticalScrollIndicator={false}
-            onScroll={scrollHandler}
+            onScroll={handleScroll}
             scrollEventThrottle={16}
+            ref={scrollViewRef}
         >
             <SafeAreaView>
                 <VStack flex={1} backgroundColor="white"> 
@@ -294,7 +349,8 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
                                                     name={item}
                                                     isActive={conditionSelected.toLocaleUpperCase() 
                                                         === item.toLocaleUpperCase()}
-                                                    onPress={() =>  handleCondition(item)}                                               
+                                                    onPress={() =>  handleCondition(item)} 
+                                                    // onPress={scrollToPosition}                                              
                                                 />                                                                         
                                             )}
                                             horizontal
@@ -314,8 +370,8 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
                             </Box>
                         </Box>
                     </Animated.View>
-                </VStack>
-                <AlertModal/>
+                </VStack>                
+                <AlertModal/>           
             </SafeAreaView>
         </Animated.ScrollView> 
         </>     

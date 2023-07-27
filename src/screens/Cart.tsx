@@ -18,6 +18,7 @@ export function Cart({ navigation }: RootStackScreenProps<'Cart'>){
     const subtotal = item.quantity * item.price;
     return accumulator + subtotal;
   }, 0);
+  const totalCoffeePrice = total.toFixed(2);
    
   function handleGoBackToHome() {
     setLoading(true)
@@ -72,7 +73,7 @@ export function Cart({ navigation }: RootStackScreenProps<'Cart'>){
             
               <HStack justifyContent="flex-start" alignItems='center' space={2}>
                 <Text color="gray.800" fontWeight="bold" textAlign="center" fontSize="xs">R$</Text>
-                <Text color="gray.800" fontWeight="bold" textAlign="center" fontSize="lg">{total}</Text>
+                <Text color="gray.800" fontWeight="bold" textAlign="center" fontSize="lg">{totalCoffeePrice}</Text>
               </HStack>
             </HStack>
 

@@ -1,5 +1,5 @@
 import { Text, HStack, IconButton, useTheme, Box} from 'native-base'
-import { MapPin, ShoppingCart } from 'phosphor-react-native';
+import { MapPin, ShoppingCart} from 'phosphor-react-native';
 import { useCart } from '@hooks/useCart';
 
 type Props = {
