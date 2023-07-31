@@ -2,13 +2,15 @@
 import { Box, HStack, Text, VStack, useTheme, IconButton } from 'native-base';
 import { Trash, Plus, Minus } from 'phosphor-react-native';
 
-import React from 'react';
+import React, { useState } from 'react';
+import IconButtonBase from './BaseIconButton';
 
 type AdjustingBoxProps = {
   onDecrease: () => void;
   onIncrease: () => void;
   onRemove: () => void;
   quantity: number;
+  isLoading: boolean;
 };
 
 export function AdjustingBox({
@@ -16,6 +18,7 @@ export function AdjustingBox({
   onIncrease,
   quantity,
   onRemove,
+  isLoading
 }: AdjustingBoxProps) {
   const { colors, sizes } = useTheme();
 
@@ -39,12 +42,11 @@ export function AdjustingBox({
         />
       </HStack>
 
-      <Box bg="gray.100" rounded={5}>
-        <IconButton
-          icon={<Trash color={colors.purple[200]} size={sizes[6]} />}
-          onPress={onRemove}
-        />
-      </Box>
+      <IconButtonBase
+        icon={<Trash color={colors.purple[200]} size={sizes[6]} />}
+        onPress={onRemove}
+        isLoading={isLoading}
+      />
     </HStack>
   );
 }

@@ -164,7 +164,6 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
         const lastCoffee = cart[cart.length - 1];
         setLastProduct(lastCoffee); 
         checkItemsCart();       
-        // handleOpenModal(); 
     }
 
     function AlertModal() {        
@@ -192,12 +191,12 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
                                     </Box>
                                     <Box rounded="full" w={5} h={5} bg="purple.200" top={-18} left={-18}>
                                         <Text color="gray.200" fontWeight="bold" textAlign="center" fontSize="xs">
-                                            {lastProduct.quantity}
+                                            {/* {lastProduct.quantity} */}
                                         </Text>
                                     </Box>                     
                                 </HStack>
                                 <Text color="gray.500">
-                                    {lastProduct.quantity} unidades de cafe {lastProduct.name} de {lastProduct.size} foi adicionado no carrinho!
+                                    {/* {lastProduct.quantity} unidades de {lastProduct.name} de {lastProduct.size} foi adicionado no carrinho! */}
                                 </Text>  
                             </HStack>   
                             <HStack justifyContent="flex-start" alignItems='center' space={2}>

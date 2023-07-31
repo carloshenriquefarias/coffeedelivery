@@ -7,6 +7,7 @@ import { useCart } from '../hooks/useCart';
 import { useRef, useState } from 'react';
 
 import Animated, { SlideOutRight } from 'react-native-reanimated';
+import { isLoading } from 'expo-font';
 export interface Coffee {
     id: string;
     tags?: string[];
@@ -20,20 +21,25 @@ export function ItemsCart(){
 
     const { cart, removeProductCart, addItemProductCart, removeItemProductCart} = useCart();
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const toast = useToast();
-    const swipeableRef = useRef<Swipeable[]>([])
+    const swipeableRef = useRef<Swipeable[]>([]);
 
     async function handleItemRemove(productId: string, index: number) {
         swipeableRef.current?.[index].close();
 
         try {
-          await removeProductCart(productId);
-    
-          toast.show({
-            title: 'Produto removido',
-            placement: 'top',
-            bgColor: 'green.500'
-          });
+
+            setIsLoading(true);
+            await removeProductCart(productId);
+        
+            toast.show({
+                title: 'Produto removido',
+                placement: 'top',
+                bgColor: 'green.500'
+            });
+            setIsLoading(false);
     
         } catch (error) {
           toast.show({
@@ -118,6 +124,7 @@ export function ItemsCart(){
                                         addQuantity={() => handleAddItem(item.id, index)}
                                         removeQuantity={() => handleRemoveItemCart(item.id, index)}
                                         quantity={item.quantity}
+                                        isLoading={isLoading}
                                     />
                                 </Swipeable>
                             </Animated.View>
