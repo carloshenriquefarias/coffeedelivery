@@ -59,7 +59,6 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
         photo: coffeeInformations?.photo,
       }
       
-
       await addProductCart(
         coffeeSelectedData
       );

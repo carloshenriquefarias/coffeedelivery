@@ -11,6 +11,7 @@ export function Cart({ navigation }: RootStackScreenProps<'Cart'>){
 
   const { colors, sizes } = useTheme();
   const { cart } = useCart();
+  
   const [loading, setLoading] = useState(false);
 
   const total = cart.reduce((accumulator, item) => {

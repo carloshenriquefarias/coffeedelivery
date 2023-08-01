@@ -24,13 +24,7 @@ import Animated, {
     BounceInUp, 
     useAnimatedScrollHandler,
     useSharedValue,
-    useAnimatedStyle,
-    interpolate,
-    Extrapolate,
-    withTiming,
 } from 'react-native-reanimated';
-import { StorageCartProps } from '@storage/storageCoffee';
-
 interface CoffeeData {
     id: string;
     tags: string;
@@ -41,10 +35,6 @@ interface CoffeeData {
     onPress?: () => void;
 }
 
-// type RouteParamsProps = {
-//     new_s: string;
-// }
-
 export function Home({ navigation }: RootStackScreenProps<'Home'>){
 
     const route = useRoute();
@@ -54,34 +44,11 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
     const selectedCoffees = coffeeData.filter(coffee => coffeeNames.includes(coffee.name));   
 
     const scrollY = useSharedValue(0);
-
     const handleScroll = useAnimatedScrollHandler((event) => {
         scrollY.value = event.contentOffset.y;
     });
 
     const scrollViewRef = useRef<ScrollView>(null);
-
-    function scrollToPositionTraditionalCoffee () {
-        const targetY = 770;
-        if (scrollViewRef.current) {
-            scrollViewRef.current.scrollTo({ y: targetY, animated: true});
-        }
-    };
-
-    function scrollToPositionSweetCoffee () {
-        const targetY = 2120;
-        if (scrollViewRef.current) {
-            scrollViewRef.current.scrollTo({ y: targetY, animated: true});
-        }
-    };        
-
-    function scrollToPositionSpecialCoffee () {
-        const targetY = 2720;
-        if (scrollViewRef.current) {
-            scrollViewRef.current.scrollTo({ y: targetY, animated: true});
-        }
-    };
-
     const newCoffesArray = selectedCoffees.map(coffee => {
         return {
             id: coffee.id,
@@ -103,36 +70,6 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
     const { cart } = useCart();
     const { colors, sizes } = useTheme();
     const { width } = Dimensions.get('window');
-
-    const statusBarStyle = useAnimatedStyle(() => {
-        const opacity = interpolate(scrollY.value, [740, 900], [0, 1], Extrapolate.CLAMP);
-        const backgroundColor = interpolate(scrollY.value, [50, 740], [0, 1], Extrapolate.CLAMP);
-        const barStyle = opacity > 0.5 ? colors.gray[300] : colors.gray[600];
-        const interpolatedBackgroundColor = backgroundColor > 0.5 ? colors.gray[300] : colors.gray[700];
-
-        return {
-            opacity,
-            backgroundColor: interpolatedBackgroundColor,
-            barStyle,
-        };
-    });
-
-    const fixedProgressBarStyles = useAnimatedStyle(() => {
-        return {
-          opacity: interpolate(scrollY.value, [50, 90], [0, 10], Extrapolate.CLAMP),
-          transform: [
-            {
-              translateY: interpolate(scrollY.value, [750, 900], [-740, 600], Extrapolate.CLAMP),
-            },
-          ],
-        }
-    })
-
-    const headerStyles = useAnimatedStyle(() => {
-        return {
-          opacity: interpolate(scrollY.value, [60, 90], [1, 0], Extrapolate.CLAMP),
-        }
-    })    
     
     const sections: { [key: string]: { title: string; data: CoffeeData[] } } = coffeeData.reduce(
         (acc, coffee) => {
@@ -149,6 +86,27 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
         
     const coffeeOptions = ['TRADICIONAIS', 'DOCES', 'ESPECIAIS'];
     const sectionsArray = Object.values(sections);  
+
+    function scrollToPositionTraditionalCoffee () {
+        const targetY = 770;
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollTo({ y: targetY, animated: true});
+        }
+    };
+
+    function scrollToPositionSweetCoffee () {
+        const targetY = 2120;
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollTo({ y: targetY, animated: true});
+        }
+    };        
+
+    function scrollToPositionSpecialCoffee () {
+        const targetY = 2720;
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollTo({ y: targetY, animated: true});
+        }
+    };
     
     function checkItemsCart(){
 
@@ -274,105 +232,100 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
     },[cart]))
     
     return(
-    <>
-        {/* <Animated.View style={statusBarStyle}>
-            <StatusBar translucent animated barStyle={statusBarStyle.backgroundColor} />
-        </Animated.View> */}
+        <>
+            <Animated.ScrollView 
+                contentContainerStyle={{ flexGrow: 1 }} 
+                showsVerticalScrollIndicator={false}
+                onScroll={handleScroll}
+                scrollEventThrottle={16}
+                ref={scrollViewRef}
+            >
+                <SafeAreaView>
+                    <VStack flex={1} backgroundColor="white"> 
+                        <Animated.View entering={BounceInUp.duration(3000).delay(1000)}>            
+                            <Box width="100%" h="400px" backgroundColor="gray.800">
+                                <Header goToCart={handleGoToCart} quantityCoffee={cart.length}/>
+                                <Text mt={10} color="gray.200" fontWeight="bold" fontSize="lg" px="8">
+                                    Encontre o café perfeito para qualquer hora do dia
+                                </Text>
+                                <InputSearch
+                                    onChangeText={handleSearch}
+                                    value={search}
+                                />
+                            </Box>
+                        </Animated.View>                    
+                    
+                        <View 
+                            bg="white" 
+                            backgroundColor='rgba(0, 0, 0, 0)'
+                            top={-120}
+                        >
+                            <Animated.View entering={BounceInRight.duration(4000).delay(2000)}> 
+                                <Carousel
+                                    containerCustomStyle={{ overflow: 'visible' }}
+                                    data={newCoffesArray}
+                                    renderItem={({ item }) => (                                  
+                                        <TypeCoffee
+                                            id={item.id}
+                                            photo={item.photo}
+                                            tags={item.tags}
+                                            name={item.name}
+                                            description={item.description}
+                                            price={item.price}
+                                        />               
+                                    )}
+                                    firstItem={1}
+                                    loop={true}
+                                    inactiveSlideScale={0.75}
+                                    inactiveSlideOpacity={0.75}
+                                    sliderWidth={width}
+                                    itemWidth={width * 0.55}
+                                    slideStyle={{ display: 'flex', alignItems: 'center' }}
+                                />
+                            </Animated.View>
+                        </View>
 
-        <Animated.ScrollView 
-            contentContainerStyle={{ flexGrow: 1 }} 
-            showsVerticalScrollIndicator={false}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-            ref={scrollViewRef}
-        >
-            <SafeAreaView>
-                <VStack flex={1} backgroundColor="white"> 
-                    <Animated.View entering={BounceInUp.duration(3000).delay(1000)}>            
-                        <Box width="100%" h="400px" backgroundColor="gray.800">
-                            <Header goToCart={handleGoToCart} quantityCoffee={cart.length}/>
-                            <Text mt={10} color="gray.200" fontWeight="bold" fontSize="lg" px="8">
-                                Encontre o café perfeito para qualquer hora do dia
-                            </Text>
-                            <InputSearch
-                                onChangeText={handleSearch}
-                                value={search}
-                            />
-                        </Box>
-                    </Animated.View>                    
-                   
-                    <View 
-                        bg="white" 
-                        backgroundColor='rgba(0, 0, 0, 0)'
-                        top={-120}
-                    >
-                        <Animated.View entering={BounceInRight.duration(4000).delay(2000)}> 
-                            <Carousel
-                                containerCustomStyle={{ overflow: 'visible' }}
-                                data={newCoffesArray}
-                                renderItem={({ item }) => (                                  
-                                    <TypeCoffee
-                                        id={item.id}
-                                        photo={item.photo}
-                                        tags={item.tags}
-                                        name={item.name}
-                                        description={item.description}
-                                        price={item.price}
-                                    />               
-                                )}
-                                firstItem={1}
-                                loop={true}
-                                inactiveSlideScale={0.75}
-                                inactiveSlideOpacity={0.75}
-                                sliderWidth={width}
-                                itemWidth={width * 0.55}
-                                slideStyle={{ display: 'flex', alignItems: 'center' }}
-                            />
-                        </Animated.View>
-                    </View>
+                        <Animated.View entering={BounceInDown.duration(3000).delay(1000)}>                   
+                            <Box width="100%" backgroundColor="white" top={-120}>
+                                <Box mt={5}>
+                                    <Box borderWidth="1px" h={24} alignItems='flex-start' justifyContent='center' borderColor="gray.100" >
+                                        <Text color="gray.700" fontSize="md" px="8" fontWeight="bold">
+                                            Nossos cafés
+                                        </Text>
 
-                    <Animated.View entering={BounceInDown.duration(3000).delay(1000)}>                   
-                        <Box width="100%" backgroundColor="white" top={-120}>
-                            <Box mt={5}>
-                                <Box borderWidth="1px" h={24} alignItems='flex-start' justifyContent='center' borderColor="gray.100" >
-                                    <Text color="gray.700" fontSize="md" px="8" fontWeight="bold">
-                                        Nossos cafés
-                                    </Text>
+                                        <HStack space={7} px="8" mt={4}>
+                                            <FlatList 
+                                                data={coffeeOptions}
+                                                keyExtractor={item => item}
+                                                renderItem={({ item }) => (
+                                                    <BoxCondition 
+                                                        name={item}
+                                                        isActive={conditionSelected.toLocaleUpperCase() 
+                                                            === item.toLocaleUpperCase()}
+                                                        onPress={() =>  handleCondition(item)}                                             
+                                                    />                                                                         
+                                                )}
+                                                horizontal
+                                                showsHorizontalScrollIndicator={false}
+                                            />                                                                 
+                                        </HStack>
+                                    </Box>
 
-                                    <HStack space={7} px="8" mt={4}>
-                                        <FlatList 
-                                            data={coffeeOptions}
-                                            keyExtractor={item => item}
-                                            renderItem={({ item }) => (
-                                                <BoxCondition 
-                                                    name={item}
-                                                    isActive={conditionSelected.toLocaleUpperCase() 
-                                                        === item.toLocaleUpperCase()}
-                                                    onPress={() =>  handleCondition(item)} 
-                                                    // onPress={scrollToPosition}                                              
-                                                />                                                                         
-                                            )}
-                                            horizontal
-                                            showsHorizontalScrollIndicator={false}
-                                        />                                                                 
-                                    </HStack>
-                                </Box>
-
-                                <Box mt={3}>                                                
-                                    <SectionList
-                                        sections={search.length > 0 ? [{ title: '', data: filteredData }] : sectionsArray}
-                                        renderItem={renderItem}
-                                        renderSectionHeader={renderSectionHeader}
-                                        keyExtractor={(item, index) => item.id + index}
-                                    />
+                                    <Box mt={3}>                                                
+                                        <SectionList
+                                            sections={search.length > 0 ? [{ title: '', data: filteredData }] : sectionsArray}
+                                            renderItem={renderItem}
+                                            renderSectionHeader={renderSectionHeader}
+                                            keyExtractor={(item, index) => item.id + index}
+                                        />
+                                    </Box>
                                 </Box>
                             </Box>
-                        </Box>
-                    </Animated.View>
-                </VStack>                
-                <AlertModal/>           
-            </SafeAreaView>
-        </Animated.ScrollView> 
+                        </Animated.View>
+                    </VStack>                
+                    <AlertModal/>           
+                </SafeAreaView>
+            </Animated.ScrollView> 
         </>     
     );
 }
