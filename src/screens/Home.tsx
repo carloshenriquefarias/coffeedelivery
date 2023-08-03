@@ -110,7 +110,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>){
     
     function checkItemsCart(){
 
-        const acc = 2
+        const acc = 1
         const numberOfItems = cart.length
 
         if(numberOfItems > acc){

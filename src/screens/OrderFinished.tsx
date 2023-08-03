@@ -1,5 +1,4 @@
 import {Box, Text, VStack, Center } from 'native-base';
-import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native';

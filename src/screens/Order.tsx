@@ -46,8 +46,7 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
 
   async function handleAddProductToCart() {
 
-    try {
-      
+    try {      
       setLoading(true);
 
       const coffeeSelectedData = {
@@ -216,7 +215,6 @@ export function Order({ navigation }: RootStackScreenProps<'Order'>){
                 
                 <Input
                   onChangeText={(text) => setQuantity(parseInt(text, 10))}
-                  // keyboardType="numeric"
                   textAlign="center"
                   value={quantity.toString()}
                   w={10}

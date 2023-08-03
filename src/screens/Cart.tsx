@@ -1,8 +1,9 @@
-import { Box, HStack, ScrollView, StatusBar, Text, VStack, useTheme, IconButton, Center} from 'native-base';
-
+import { Box, HStack, ScrollView, Text, VStack, useTheme, IconButton, Center} from 'native-base';
 import { ArrowLeft, ShoppingCart} from 'phosphor-react-native';
+
 import { ButtonDefault } from '@components/Button';
 import { ItemsCart } from '@components/ItemsCart';
+
 import { RootStackScreenProps } from 'src/@types/navigation';
 import { useState } from 'react';
 import { useCart } from '@hooks/useCart';
@@ -12,7 +13,7 @@ export function Cart({ navigation }: RootStackScreenProps<'Cart'>){
   const { colors, sizes } = useTheme();
   const { cart } = useCart();
   
-  const [loading, setLoading] = useState(false);
+  const [ loading, setLoading ] = useState(false);
 
   const total = cart.reduce((accumulator, item) => {
     const subtotal = item.quantity * item.price;
@@ -69,8 +70,7 @@ export function Cart({ navigation }: RootStackScreenProps<'Cart'>){
           >
             <HStack justifyContent="space-between" alignItems='center' mt={2} px={8}>
               <Text color="gray.600" textAlign="center" fontSize="md">Valor Total</Text>
-
-            
+           
               <HStack justifyContent="flex-start" alignItems='center' space={2}>
                 <Text color="gray.800" fontWeight="bold" textAlign="center" fontSize="xs">R$</Text>
                 <Text color="gray.800" fontWeight="bold" textAlign="center" fontSize="lg">{totalCoffeePrice}</Text>

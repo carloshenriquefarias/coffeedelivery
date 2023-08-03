@@ -2,7 +2,7 @@
 import { Box, HStack, Text, VStack, useTheme, IconButton } from 'native-base';
 import { Trash, Plus, Minus } from 'phosphor-react-native';
 
-import React, { useState } from 'react';
+import React from 'react';
 import IconButtonBase from './BaseIconButton';
 
 type AdjustingBoxProps = {

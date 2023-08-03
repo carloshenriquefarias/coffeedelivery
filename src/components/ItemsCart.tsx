@@ -89,9 +89,7 @@ export function ItemsCart(){
                         renderItem={({ item, index }) => (
                             <Animated.View
                                 key={item.id}
-                                // entering={SlideInRight}
                                 exiting={SlideOutRight}
-                                // layout={Layout.springify()}
                             >
                                 <Swipeable
                                     ref={ref => {

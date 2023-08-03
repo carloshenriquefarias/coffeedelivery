@@ -2,7 +2,6 @@ import { AdjustingBox } from '@components/AdjustingBox';
 import { Box, HStack, Text, VStack} from 'native-base';
 import { Images } from '@components/Image';
 import { StorageCartProps} from '../storage/storageCoffee';
-import { useState } from 'react';
 
 type Props = {
     onRemove: () => void;
@@ -16,8 +15,7 @@ type Props = {
 export function ItemCartCard({ data, onRemove, addQuantity, removeQuantity, quantity, isLoading = (false) }: Props){
     
     const unityCoffeePrice = data.price;
-    const totalCoffeePrice = (unityCoffeePrice * quantity).toFixed(2);
-    
+    const totalCoffeePrice = (unityCoffeePrice * quantity).toFixed(2);    
 
     return(
         <HStack
