@@ -7,11 +7,12 @@ Uma aplicação mobile em React Native de E-commerce com animações muito inter
 
 ### Demo:
 <h1 align="center">
-  <img alt="Marketspace" height="800" title="" src="./github/home.png" />
+  <img alt="coffee" height="800" title="" src="./github/home.png" />
+   <img alt="coffeecart" height="800" title="" src="./github/carrinho.png" />
 </h1>
 <div align="center">
     <img alt="Coffeedelivery" height="600" title="" 
-  src="./github/tentativa2_acelerado_2x.gif" />
+  src="./github/Animação2.gif" />
 </div>
 
 ### Funcionalidades:
